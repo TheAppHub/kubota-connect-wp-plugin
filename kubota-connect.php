@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * The plugin bootstrap file
+ *
+ * This file is read by WordPress to generate the plugin information in the plugin
+ * admin area. This file also includes all of the dependencies used by the plugin,
+ * registers the activation and deactivation functions, and defines a function
+ * that starts the plugin.
+ *
+ * @link              https://theapphub.com.au
+ * @since             1.0.0
+ * @package           Kubota_Connect
+ *
+ * @wordpress-plugin
+ * Plugin Name:       Kubota Connect for WP
+ * Plugin URI:        https://https://api.kubota.io/dealer-api-docs
+ * Description:       Effortlessly connect your WordPress site to Kubota Connect and retrieve dealer-specific products, finance offers, and promotion slides. Enhance your website's functionality by showcasing the latest Kubota equipment, offers, and promotions tailored specifically to your dealership.
+ * Version:           1.0.0
+ * Author:            The App Hub
+ * Author URI:        https://theapphub.com.au/
+ * License:           GPL-2.0+
+ * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * Text Domain:       kubota-connect
+ * Domain Path:       /languages
+ */
+
+// If this file is called directly, abort.
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
+
+/**
+ * Currently plugin version.
+ * Start at version 1.0.0 and use SemVer - https://semver.org
+ * Rename this for your plugin and update it as you release new versions.
+ */
+define( 'KUBOTA_CONNECT_VERSION', '1.0.0' );
+
+/**
+ * The code that runs during plugin activation.
+ * This action is documented in includes/class-kubota-connect-activator.php
+ */
+function activate_kubota_connect() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-activator.php';
+	Kubota_Connect_Activator::activate();
+}
+
+/**
+ * The code that runs during plugin deactivation.
+ * This action is documented in includes/class-kubota-connect-deactivator.php
+ */
+function deactivate_kubota_connect() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-deactivator.php';
+	Kubota_Connect_Deactivator::deactivate();
+}
+
+register_activation_hook( __FILE__, 'activate_kubota_connect' );
+register_deactivation_hook( __FILE__, 'deactivate_kubota_connect' );
+
+/**
+ * The core plugin class that is used to define internationalization,
+ * admin-specific hooks, and public-facing site hooks.
+ */
+require plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect.php';
+
+/**
+ * Begins execution of the plugin.
+ *
+ * Since everything within the plugin is registered via hooks,
+ * then kicking off the plugin from this point in the file does
+ * not affect the page life cycle.
+ *
+ * @since    1.0.0
+ */
+function run_kubota_connect() {
+
+	$plugin = new Kubota_Connect();
+	$plugin->run();
+
+}
+run_kubota_connect();
