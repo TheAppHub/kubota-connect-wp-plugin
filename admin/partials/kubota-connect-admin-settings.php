@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Provide a admin area view for the plugin
+ * Provide a admin settings view for the plugin
  *
  * This file is used to markup the admin-facing aspects of the plugin.
  *
@@ -11,6 +11,10 @@
  * @package    Kubota_Connect
  * @subpackage Kubota_Connect/admin/partials
  */
+
+use Carbon_Fields\Container;
+use Carbon_Fields\Field;
+
 ?>
 
 <h3>Kubota Connect Settings</h3>
