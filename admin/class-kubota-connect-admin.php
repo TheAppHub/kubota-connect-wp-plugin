@@ -100,4 +100,69 @@ class Kubota_Connect_Admin {
 
 	}
 
+	/**
+	 * Add a Kubota Connect menu item to the admin menu
+	 *
+	 * @since    1.0.0
+	 */
+	public function add_admin_menu() {
+		add_menu_page(
+			'Kubota Connect',
+			'Kubota Connect',
+			'manage_options',
+			'kubota-connect',
+			array( $this, 'display_admin_settings_page' ),
+			'dashicons-admin-site',
+			24
+		);
+
+		// Add a submenu for the Kubota Connect settings page
+		add_submenu_page(
+			'kubota-connect',
+			'Kubota Connect Settings',
+			'Settings',
+			'manage_options',
+			'kubota-connect',
+			array( $this, 'display_admin_settings_page' )
+		);
+
+		// Add a submenu for the Kubota Connect products page
+		add_submenu_page(
+			'kubota-connect',
+			'Kubota Connect Products',
+			'Products',
+			'manage_options',
+			'edit.php?post_type=kubota-products'
+		);
+
+		// Add a submenu for the Kubota Connect finance page
+		add_submenu_page(
+			'kubota-connect',
+			'Kubota Connect Finance',
+			'Finance Offers',
+			'manage_options',
+			'edit.php?post_type=kubota-finance',
+		);
+
+		// Add a submenu for the Kubota Connect slider page
+		add_submenu_page(
+			'kubota-connect',
+			'Kubota Connect Slider',
+			'Slider',
+			'manage_options',
+			'edit.php?post_type=kubota-slides',
+		);
+
+		
+	}
+
+	// Display the Kubota Connect products page
+	public function display_admin_products_page() {
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/kubota-connect-admin-settings.php';
+	}
+
+	// Display the Kubota Connect settings page
+	public function display_admin_settings_page() {
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/kubota-connect-admin-settings.php';
+	}
 }

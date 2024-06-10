@@ -13,8 +13,8 @@
  * @package           Kubota_Connect
  *
  * @wordpress-plugin
- * Plugin Name:       Kubota Connect for WP
- * Plugin URI:        https://https://api.kubota.io/dealer-api-docs
+ * Plugin Name:       Kubota Connect
+ * Plugin URI:        https://api.kubota.io/dealer-api-docs
  * Description:       Effortlessly connect your WordPress site to Kubota Connect and retrieve dealer-specific products, finance offers, and promotion slides. Enhance your website's functionality by showcasing the latest Kubota equipment, offers, and promotions tailored specifically to your dealership.
  * Version:           1.0.0
  * Author:            The App Hub
