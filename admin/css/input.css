@@ -6,3 +6,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+	font-family: "kubota connect";
+	src: url("../fonts/kubota-connect.eot");
+	src: url("../fonts/kubota-connect.eot?#iefix") format("embedded-opentype"),
+		url("../fonts/kubota-connect.woff") format("woff"),
+		url("../fonts/kubota-connect.ttf") format("truetype"),
+		url("../fonts/kubota-connect.svg#kubota-connect") format("svg");
+	font-weight: normal;
+	font-style: normal;
+}
+[class*="dashicons-kubota-connect"]:before {
+	display: inline-block;
+	font-family: "kubota connect";
+	font-style: normal;
+	font-weight: normal;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+.dashicons-kubota-connect:before {
+	content: "\0041";
+}

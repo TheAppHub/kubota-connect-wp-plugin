@@ -112,7 +112,7 @@ class Kubota_Connect_Admin {
 			'manage_options',
 			'kubota-connect',
 			array( $this, 'display_admin_settings_page' ),
-			'dashicons-admin-site',
+			'dashicons-kubota-connect',
 			24
 		);
 
