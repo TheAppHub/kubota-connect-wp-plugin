@@ -78,7 +78,6 @@ class Kubota_Connect {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
-		$this->define_post_type_hooks();
 
 	}
 
@@ -165,6 +164,9 @@ class Kubota_Connect {
 
 		// Add a Kubota Connect menu item to the admin menu
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_admin_menu' );
+
+		// Add a settings link to the plugin
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_options' );
 	}
 
 	/**
@@ -181,19 +183,9 @@ class Kubota_Connect {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
-	}
+		$plugin_cpt = new Kubota_Connect_Post_Types( $this->get_plugin_name(), $this->get_version() );
+		$this->loader->add_action( 'init', $plugin_cpt, 'create_custom_post_types' );
 
-	/**
-	 * Register all of the hooks related to the custom post types
-	 * of the plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function define_post_type_hooks() {
-		$plugin_post_types = new Kubota_Connect_Post_Types( $this->get_plugin_name(), $this->get_version() );
-
-		$this->loader->add_action( 'init', $plugin_post_types, 'create_custom_post_types' );
 	}
 
 	/**
