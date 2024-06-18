@@ -47,11 +47,22 @@ class Kubota_Connect_Admin {
 	 * @param      string    $plugin_name       The name of this plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
+
+	/**
+	 * The data manager used to handle data from the Kubota Connect data
+	 * 
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      Kubota_Connect_Data_Manager    $data_manager    The data manager used to handle data from the Kubota Connect data.
+	 */
+	 private $data_manager;
+
 	public function __construct( $plugin_name, $version ) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+		$this->data_manager = new Kubota_Connect_Data_Manager();
 	}
 
 	/**
@@ -104,11 +115,9 @@ class Kubota_Connect_Admin {
 	 * @since    1.0.0
 	 */
 	public function register_options(){
-		register_setting('kc-settings-group', 'kc_api_key_token');
-		register_setting('kc-settings-group', 'kc_product_sync');
-		register_setting('kc-settings-group', 'kc_finance_sync');
-		register_setting('kc-settings-group', 'kc_finance_first_of_month');
-		register_setting('kc-settings-group', 'kc_slider_sync');
+		// Register the settings for Kubota Connect
+		// This will be handled by the Kubota_Connect_Data_Manager class
+		$this->data_manager->register_options();
 	}
 
 	/**
@@ -160,16 +169,14 @@ class Kubota_Connect_Admin {
 			'edit.php?post_type=kubota-finance',
 		);
 
-		// Add a submenu for the Kubota Connect slider page
+		// Add a submenu for the Kubota Connect highlights page
 		add_submenu_page(
 			'kubota-connect',
-			'Kubota Connect Slider',
-			'Slider',
+			'Kubota Connect Highlights',
+			'Highlights',
 			'manage_options',
-			'edit.php?post_type=kubota-slides',
+			'edit.php?post_type=kubota-highlights',
 		);
-
-		
 	}
 
 	/**
@@ -181,7 +188,8 @@ class Kubota_Connect_Admin {
 	 * @since    1.0.0
 	 */
 	public function display_admin_settings_page() {
-		$options = $this->get_kc_options();
+		$api_key_token = $this->data_manager->get_kc_api_key_token();
+		$sync_options = $this->data_manager->get_kc_options();
 		
 		ob_start(); // started buffer
 
@@ -194,77 +202,42 @@ class Kubota_Connect_Admin {
 		echo $template;
 	}
 
+	// Add the AJAX actions for the Kubota Connect plugin
+
 	/**
-	 * Get the Kubota Connect options
+	 * Test the connection to the Kubota Connect API
 	 * 
-	 * This function will return the options saved in the database for Kubota Connect.
-	 * If the options are not saved in the database, it will return the default values.
+	 * This function will test the connection to the Kubota Connect API using the API Key Token provided.
+	 * It will return a response with the status of the connection.
 	 *
 	 * @since    1.0.0
 	 */
-	public function get_kc_options(){
-		$current_options = array();
+	public function kubota_connect_test_connection(){
+		$data = $_POST['data'];
+		$token = $data['token'];
 
-		try {
-			$current_options = array(
-				'kc_token' => $this->get_api_key_token() ? $this->get_api_key_token() : $this->get_defaults('kc_token'),
-				'kc_product_sync' => $this->get_option( 'kc_product_sync' ),
-				'kc_finance_sync' => $this->get_option( 'kc_finance_sync' ),
-				'kc_finance_first_of_month' => $this->get_option( 'kc_finance_first_of_month' ),
-				'kc_slider_sync' => $this->get_option( 'kc_slider_sync' ),
-			);
-		} catch (Exception $e) {
-			$current_options['token'] = '';
-		}
+		$response = $this->data_manager->test_connection($token);
 
-		return $current_options;
+		wp_send_json( $response );
 	}
 
 	/**
-	 * Get the Kubota Connect options
-	 *
-	 * This function will return the value saved in the database for the option name provided.
-	 * If the option is not saved in the database, it will return the default value.
-	 *
-	 * @since    1.0.0
-	 */
-	private function get_option($option_name) {
-		return get_option( $option_name ) ? get_option( $option_name ) : $this->get_defaults($option_name);
-	}
-
-	/**
-	 * Get the API Key Token
+	 * Sync all data with the Kubota Connect API
 	 * 
-	 * This function will return the API Key Token from the wp-config.php file if it is defined there.
-	 * If it is not defined in the wp-config.php file, it will return the value saved in the database.
+	 * This function will sync all data with the Kubota Connect API.
+	 * It will return a response with the status of the sync.
 	 *
 	 * @since    1.0.0
 	 */
-	private function get_api_key_token( ) {
-		$isDefined = defined("KC_API_KEY_TOKEN");
-		if($isDefined) return "KC_API_KEY_TOKEN";
-
-		$savedInDB = get_option( 'kc_api_key_token' );
-		if($savedInDB) return $savedInDB;
-
-		return '';
+	public function kubota_connect_sync_all_data(){
+		$token = $this->data_manager->sync_all_data();
+		
+		wp_send_json( 
+			array(
+				'statusCode' => 200,
+				'message' => 'The Kubota data was synced successfully'
+			));
 	}
 
-	/**
-	 * Defaults for Kubota Connect options
-	 *
-	 * @since    1.0.0
-	 */
-	private function get_defaults($option_name) {
-		$defaults = array(
-			'kc_token' => '',
-			'kc_product_sync' => 'monthly',
-			'kc_finance_sync' => 'fortnighlty',
-			'kc_finance_first_of_month' => '',
-			'kc_slider_sync' => 'daily',
-		);
-
-		return $defaults[$option_name];
-	}
 
 }

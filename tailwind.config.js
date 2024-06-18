@@ -9,7 +9,23 @@ module.exports = withMT({
 		"./public/partials/*.php",
 	],
 	theme: {
-		extend: {},
+		extend: {
+			keyframes: {
+				"fade-in": {
+					"0%": {
+						opacity: "0%",
+						transform: "translateY(-50%)",
+					},
+					"100%": {
+						opacity: "100%",
+						transform: "translateY(0%)",
+					},
+				},
+			},
+			animation: {
+				"fade-in": "fade-in 0.7s ease-in-out",
+			},
+		},
 	},
 	plugins: [],
 });

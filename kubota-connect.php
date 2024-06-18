@@ -64,6 +64,18 @@ register_deactivation_hook( __FILE__, 'deactivate_kubota_connect' );
  */
 require plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect.php';
 
+ /**
+ * Define Carbon Fields directory
+ */
+ define( 'Carbon_Fields\DIR', plugin_dir_path( __FILE__ ) . '/vendor/htmlburger/carbon-fields/' );
+
+/**
+ * Include the Composer autoload file
+ */
+if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) :
+	require_once dirname( __FILE__ ) . '/vendor/autoload.php';
+endif;
+
 /**
  * Begins execution of the plugin.
  *

@@ -1,5 +1,8 @@
 <?php
 
+use Carbon_Fields\Container;
+use Carbon_Fields\Field;
+
 /**
  * The file that defines the core plugin class
  *
@@ -90,6 +93,13 @@ class Kubota_Connect {
 	 * - Kubota_Connect_i18n. Defines internationalization functionality.
 	 * - Kubota_Connect_Admin. Defines all hooks for the admin area.
 	 * - Kubota_Connect_Public. Defines all hooks for the public side of the site.
+	 * - Kubota_Connect_Post_Types. Defines custom post types.
+	 * - Kubota_Connect_Http. Defines HTTP calls to Kubota Connect API.
+	 * - Kubota_Connect_Data. Defines data handling.
+	 * - Kubota_Connect_Data_Encryption. Defines data encryption.
+	 * - Kubota_Connect_Custom_Fields_Finance. Defines custom fields for finance.
+	 * - Kubota_Connect_Custom_Fields_Product. Defines custom fields for products.
+	 * 
 	 *
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
@@ -98,7 +108,7 @@ class Kubota_Connect {
 	 * @access   private
 	 */
 	private function load_dependencies() {
-
+	
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
@@ -108,7 +118,14 @@ class Kubota_Connect {
 		/**
 		 * The class responsible for defining custom post types used by the plugin.
  		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kubota-connect-post_types.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'custom/class-kubota-connect-post_types.php';
+
+		/**
+		 * The classes responsible for defining custom fields used by the plugin.
+ 		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'helpers/class-kubota-connect-carbon-fields-class.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'custom/class-kubota-connect-custom-fields-finance.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'custom/class-kubota-connect-custom-fields-product.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
@@ -127,8 +144,23 @@ class Kubota_Connect {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-kubota-connect-public.php';
 
-		$this->loader = new Kubota_Connect_Loader();
+		/**
+		 * The class responsible for handling data from Kubota Connect API.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kubota-connect-http.php';
 
+		/**
+		 * The class responsible for handling data from Kubota Connect API and store it in the database.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kubota-connect-data.php';
+
+		/**
+		 * The class responsible for handling data encryption.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kubota-connect-password-manager.php';
+
+
+		$this->loader = new Kubota_Connect_Loader();
 	}
 
 	/**
@@ -145,7 +177,6 @@ class Kubota_Connect {
 		$plugin_i18n = new Kubota_Connect_i18n();
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-
 	}
 
 	/**
@@ -167,6 +198,10 @@ class Kubota_Connect {
 
 		// Add a settings link to the plugin
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_options' );
+
+		// Register AJAX actions
+		$this->loader->add_action( 'wp_ajax_kubota_connect_test_connection', $plugin_admin, 'kubota_connect_test_connection' );
+		$this->loader->add_action( 'wp_ajax_kubota_connect_sync_all_data', $plugin_admin, 'kubota_connect_sync_all_data' );
 	}
 
 	/**

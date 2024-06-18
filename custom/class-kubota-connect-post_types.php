@@ -225,7 +225,7 @@ class Kubota_Connect_Post_Types{
      */
     public function create_custom_post_types() {
        /**
-         * Register Kubota Products, Finance and Promotion Slides
+         * Register Kubota Products, Finance and Highlights
          *
          * @since    1.0.0
          */
@@ -270,19 +270,19 @@ class Kubota_Connect_Post_Types{
                 'capability_type'   => 'post',
                 'has_archive'       => 'kubota-finance',
                 'hierarchical'      => false,
-                'supports'          => array( 'title', 'editor', 'thumbnail', 'custom-fields' ),
+                'supports'          => array( 'title', 'editor', 'thumbnail' ),
                 'menu_position'     => 5,
                 'show_in_rest'      => true,
                 'custom_caps'       => true,
                 'custom_caps_users' => array( 'administrator', 'editor' ),
             ),
-            // Promotion Slides
+            // Highlights
             array(
-                'slug'              => 'kubota-slides',
-                'singular'          => 'Kubota Slide',
-                'plural'            => 'Kubota Slides',
-                'menu_name'         => 'Slides',
-                'description'       => 'Kubota Promotion Slides',
+                'slug'              => 'kubota-highlights',
+                'singular'          => 'Kubota Highlight',
+                'plural'            => 'Kubota Highlights',
+                'menu_name'         => 'Highlights',
+                'description'       => 'Kubota Highlights',
                 'public'            => true,
                 'show_ui'           => true,
                 'show_in_menu'      => false,
@@ -292,10 +292,10 @@ class Kubota_Connect_Post_Types{
                 'capability_type'   => 'post',
                 'has_archive'       => false,
                 'hierarchical'      => false,
-                'supports'          => array( 'title', 'thumbnail', 'custom-fields' ),
+                'supports'          => array( 'title', 'thumbnail' ),
                 'menu_position'     => 5,
                 'show_in_rest'      => true,
-                'rewrite'           => array( 'slug' => 'promotion-slides' ),
+                'rewrite'           => array( 'slug' => 'highlights' ),
                 'custom_caps'       => true,
                 'custom_caps_users' => array( 'administrator', 'editor' ),
             ),

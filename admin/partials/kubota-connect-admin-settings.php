@@ -26,6 +26,7 @@
     <?php
     // outputs a unique nounce for our plugin options
     settings_fields('kc-settings-group');
+    settings_fields('kc-api-key-token');
     
     // generates a unique hidden field with our form handling url
     do_settings_sections('kubota-connect');
@@ -38,11 +39,17 @@
         </div>
 
         <div class="w-[56rem]">
-            
-                <div class="flex flex-row">
-                <input type="text" class="w-[32rem]" name="kc_api_key_token" placeholder="YOUR-API-KEY-TOKEN" value="<?php echo $options['kc_token'] ?>" />
-                    <button class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 ml-3 rounded">
+            <div class="flex flex-row">
+                <input type="text" id="kc-token" class="w-[32rem]" name="kc_api_key_token" placeholder="YOUR-API-KEY-TOKEN" value="<?php echo $api_key_token ?>" />
+                    <button id="kc-connect" class="bg-orange-500 disabled:opacity50 hover:bg-orange-700 text-white font-bold py-2 px-4 ml-3 rounded">
                         Connect
+                    </button>
+                    <button id="kc-connect-processing" type="button" class="hidden flex bg-orange-500 text-white font-bold py-2 px-4 ml-3 rounded" disabled>
+                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Processing...
                     </button>
                 </div>
                 <p class="text-sm text-gray-500 mt-3">Enter your API Key Token to connect to the Kubota Connect API.</p>
@@ -63,9 +70,19 @@
         </div>
 
         <div class="w-[56rem]">
+            <?php if($sync_options['kc_dealer_name'] !== '') { ?>
+            <p class="text-sm text-gray-500">This plugin is connected to the Kubota Connect API for <strong><?php echo $sync_options['kc_dealer_name'] ?></strong>.</p>
+            <?php } ?>
             <p class="text-sm text-gray-500">Click the button to sync your data with the Kubota Connect API</p>
-            <button class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4  mt-3 rounded">
+            <button id="kc-sync" <?php echo ($api_key_token === '') ? 'disabled' : '' ?> class="bg-orange-500 disabled:opacity-50 enabled:hover:bg-orange-700 text-white font-bold py-2 px-4 mt-3 rounded">
                 Sync Now
+            </button>
+            <button id="kc-sync-processing" type="button" class="hidden flex bg-orange-500 text-white font-bold py-2 px-4 mt-3 rounded" disabled>
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Processing...
             </button>
         </div>
     </div>
@@ -82,7 +99,7 @@
 
         <div class="w-[56rem]">
             <p class="text-sm text-gray-500">You can set regularly timed intervals at which data is fetched from the Kubota Connect API to ensure consistency and up-to-date information. This process can be configured to run at various frequencies depending the nature of the data being synchronized. Automated cron jobs are used to manage these sync operations, ensuring seamless and continuous data integration between your website and the Kubota information.</p>
-            <p class="text-sm text-gray-500 mt-3">Please note that importing data from an external API is <strong>resource-intensive</strong> and should be performed only as often as absolutely necessary to maintain the website's smooth operation and optimal performance. Scheduled synchronisations run at 2am server time (please ensure that your server is configured to your local time zone).</p>
+            <p class="text-sm text-gray-500 mt-3">Please note that importing data from an external API is <strong>resource-intensive</strong> and should be performed only as often as relly necessary to maintain the website's smooth operation and optimal performance. Scheduled synchronisations run at 2am server time (please ensure that your server is configured to your local time zone).</p>
         </div>
     </div>
 
@@ -93,7 +110,7 @@
 
         <div class="w-[56rem]">
             <select name="kc_product_sync" class="w-72">
-                <?php $selected = $options['kc_product_sync']; ?>
+                <?php $selected = $sync_options['kc_product_sync']; ?>
                 <option value="weekly" <?php echo ($selected == 'weekly') ? 'selected' : ''; ?>>Weekly</option>
                 <option value="fortnightly" <?php echo ($selected == 'fortnightly') ? 'selected' : ''; ?>>Fortnightly</option>
                 <option value="monthly" <?php echo ($selected == 'monthly') ? 'selected' : ''; ?>>Monthly</option>
@@ -111,7 +128,7 @@
 
         <div class="w-[56rem]">
             <select name="kc_finance_sync" class="w-72">
-                <?php $selected = $options['kc_finance_sync']; ?>
+                <?php $selected = $sync_options['kc_finance_sync']; ?>
                 <option value="daily" <?php echo ($selected == 'daily') ? 'selected' : ''; ?>>Daily</option>
                 <option value="weekly" <?php echo ($selected == 'weekly') ? 'selected' : ''; ?>>Weekly</option>
                 <option value="fortnightly" <?php echo ($selected == 'fortnightly') ? 'selected' : ''; ?>>Fortnightly</option>
@@ -121,9 +138,9 @@
             <p class="text-sm text-gray-500 mt-2 italic">Select how often you would like Kubota finance offers to be updated by the Kubota Connect API.</p>
 
             <label class="inline-flex items-center cursor-pointer mt-3">
-                <?php $checked = ($options['kc_finance_first_of_month']) == '1' ? 'checked' : ''; ?>
+                <?php $checked = ($sync_options['kc_finance_first_of_month']) == '1' ? 'checked' : ''; ?>
                 <input type="checkbox" name="kc_finance_first_of_month" value="1" class="sr-only peer" <?php echo $checked ?>>
-                <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                 <span class="ms-3 text-sm font-medium text-gray">Update 1<sup>st</sup> of month</span>
             </label>
             <p class="text-sm text-gray-500 mt-3">Finance offers mainly get updated by Kubota on the first of a month.</p>
@@ -138,7 +155,7 @@
 
         <div class="w-[56rem]">
             <select name="kc_slider_sync" class="w-72">
-                <?php $selected = $options['kc_slider_sync']; ?>
+                <?php $selected = $sync_options['kc_slider_sync']; ?>
                 <option value="daily" <?php echo ($selected == 'daily') ? 'selected' : ''; ?>>Daily</option>
                 <option value="weekly" <?php echo ($selected == 'weekly') ? 'selected' : ''; ?>>Weekly</option>
                 <option value="fortnightly" <?php echo ($selected == 'fortnightly') ? 'selected' : ''; ?>>Fortnightly</option>
@@ -154,8 +171,52 @@
 
 </form>
 
+<div id="errorModal" class="hidden absolute z-50 left-0 top-0 w-full h-full overflow-auto bg-gray-900/[.7] -ml-5">
+    <div class="relative top-24 p-4 w-full m-auto max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow ">
+            <button type="button" class="kc-close-error absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="popup-modal">
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                </svg>
+                <span class="sr-only">Close modal</span>
+            </button>
+            <div class="p-4 md:p-5 text-center">
+                <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+                <h3 class="mb-2 text-lg font-normal text-gray-500">Sorry, something went wrong!</h3>
+                <p  id="kc-error-msg" class="mb-5 text-md font-normal text-gray-500">An error occured.</p>
+                <button type="button" class="kc-close-error text-white font-bold bg-orange-600 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+                    OK, I can fix it
+                </button>
+                <a href="mailto:kubota-connect@theapphub.com.au?subject=Problem with Kubota Connect WordPress Plugin" class="kc-close-error py-3 px-5 ms-3 text-sm font-bold text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 ">I need help</a>
+            </div>
+        </div>
+    </div>
+</div>
 
-
+<div id="successModal" class="hidden absolute z-50 left-0 top-0 w-full h-full overflow-auto bg-gray-900/[.7] -ml-5">
+    <div class="relative top-24 p-4 w-full m-auto max-w-md max-h-full animate-fade-in">
+        <div class="relative bg-white rounded-lg shadow ">
+            <button type="button" class="kc-close-success absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="popup-modal">
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                </svg>
+                <span class="sr-only">Close modal</span>
+            </button>
+            <div class="p-4 md:p-5 text-center">
+                <svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+                <h3 class="mb-2 text-lg font-normal text-gray-500">Congratulations!</h3>
+                <p  id="kc-success-msg" class="mb-5 text-md font-normal text-gray-500">It's all great!</p>
+                <button type="button" class="kc-close-success text-white bg-orange-600 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

@@ -1,32 +1,91 @@
-(function( $ ) {
-	'use strict';
+(function ($) {
+	"use strict";
 
-	/**
-	 * All of the code for your admin-facing JavaScript source
-	 * should reside in this file.
-	 *
-	 * Note: It has been assumed you will write jQuery code here, so the
-	 * $ function reference has been prepared for usage within the scope
-	 * of this function.
-	 *
-	 * This enables you to define handlers, for when the DOM is ready:
-	 *
-	 * $(function() {
-	 *
-	 * });
-	 *
-	 * When the window is loaded:
-	 *
-	 * $( window ).load(function() {
-	 *
-	 * });
-	 *
-	 * ...and/or other possibilities.
-	 *
-	 * Ideally, it is not considered best practise to attach more than a
-	 * single DOM-ready or window-load handler for a particular page.
-	 * Although scripts in the WordPress core, Plugins and Themes may be
-	 * practising this, we should strive to set a better example in our own work.
-	 */
+	$(document).ready(function () {
+		// setup our wp ajax URL
+		var wpAjaxUrl =
+			document.location.protocol +
+			"//" +
+			document.location.host +
+			"/wp-admin/admin-ajax.php";
 
-})( jQuery );
+		$("#kc-connect").click(function (event) {
+			event.preventDefault();
+
+			$("#kc-connect").addClass("hidden");
+			$("#kc-connect-processing").removeClass("hidden");
+
+			const token = $("#kc-token").val();
+
+			$.ajax({
+				method: "POST",
+				url: wpAjaxUrl,
+				data: {
+					action: "kubota_connect_test_connection",
+					data: {
+						token: token,
+					},
+				},
+				complete: function (response) {
+					console.log(response["responseJSON"]);
+					var msg = response["responseJSON"]["message"];
+					var statusCode = response["responseJSON"]["statusCode"];
+
+					if (statusCode == 200) {
+						$("#successModal").removeClass("hidden");
+						$("#kc-success-msg").text(msg);
+					} else {
+						$("#errorModal").removeClass("hidden");
+						$("#kc-error-msg").text(msg);
+					}
+
+					$("#kc-connect-processing").addClass("hidden");
+					$("#kc-connect").removeClass("hidden");
+				},
+			});
+		});
+
+		$(".kc-close-error").click(function (event) {
+			event.preventDefault();
+			$("#errorModal").addClass("hidden");
+			location.reload();
+		});
+
+		$(".kc-close-success").click(function (event) {
+			event.preventDefault();
+			$("#successModal").addClass("hidden");
+			location.reload();
+		});
+
+		$("#kc-sync").click(function (event) {
+			event.preventDefault();
+
+			$("#kc-sync").addClass("hidden");
+			$("#kc-sync-processing").removeClass("hidden");
+
+			$.ajax({
+				method: "POST",
+				url: wpAjaxUrl,
+				data: {
+					action: "kubota_connect_sync_all_data",
+				},
+				complete: function (response) {
+					var msg = response["responseJSON"]["message"];
+					var statusCode = response["responseJSON"]["statusCode"];
+					console.log(response["responseJSON"]);
+
+					if (statusCode == 200) {
+						$("#successModal").removeClass("hidden");
+						$("#kc-success-msg").text(msg);
+					} else {
+						$("#errorModal").removeClass("hidden");
+						$("#kc-error-msg").text(msg);
+					}
+
+					$("#kc-sync-processing").addClass("hidden");
+					$("#kc-sync").removeClass("hidden");
+				},
+			});
+		});
+	});
+})(jQuery);
