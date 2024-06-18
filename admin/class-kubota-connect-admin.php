@@ -120,6 +120,16 @@ class Kubota_Connect_Admin {
 		$this->data_manager->register_options();
 	}
 
+	public function create_custom_post_types(){
+		// Create Kubota Connect products 
+		$products = new Kubota_Connect_Product();
+		$products->register();
+
+		// Create Kubota Connect finance offers
+		// $finance = new Kubota_Connect_Finance();
+		// $finance->register();
+	}
+
 	/**
 	 * Add a Kubota Connect menu item to the admin menu
 	 * 

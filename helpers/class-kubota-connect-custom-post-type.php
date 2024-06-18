@@ -1,24 +1,65 @@
 <?php
 	/**
-	 * Created by Hindsight Design
-	 * Website: http://hindsight.com.au
-	 * Developer: Christoph Jürgens
+	 * Kubota Connect CustomPost Type
+	 *
+	 * @link       https://theapphub.com.au
+	 * @since      1.0.0
+	 *
+	 * @package    Kubota_Connect
+	 * @subpackage Kubota_Connect/helpers
 	 */
 
-	namespace Kubota\Helpers;
+	/**
+	 * Kubota Connect CustomPost Type
+	 *
+	 * This class is used to create custom post types.
+	 *
+	 * @since      1.0.0
+	 * @package    Kubota_Connect
+	 * @subpackage Kubota_Connect/helpers
+	 * @author     The App Hub <kubota-connect@theapphub.com.au>
+	 */
+	class Kubota_Connect_Post_Type {
 
-
-	class PostType {
-
+		/**
+		 * The arguments for the custom post type
+		 *
+		 * @since    1.0.0
+		 * @access   private
+		 * @var      array    $args    The arguments for the custom post type
+		 */
 		private $args;
 
+		/**
+		 * The name of the custom post type
+		 *
+		 * @since    1.0.0
+		 * @access   private
+		 * @var      string    $post_type    The name of the custom post type
+		 */
 		private $post_type;
 
+		/**
+		 * The title placeholder for the custom post type
+		 *
+		 * @since    1.0.0
+		 * @access   private
+		 * @var      string    $titlePlaceholder    The title placeholder for the custom post type
+		 */
 		private $titlePlaceholder;
 
+		/**
+		 * Initialize the class and set its properties.
+		 *
+		 * @since    1.0.0
+		 * @param      string    $singular       The singular name of the custom post type
+		 * @param      string    $plural    The plural name of the custom post type
+		 */
 		public function __construct( $singular, $plural ) {
-
 			$this->post_type = strtolower( $plural );
+
+			$singular = str_replace("-"," ", $singular);
+			$plural = str_replace("-"," ", $plural);
 
 			$plural   = ucfirst( strtolower( $plural ) );
 			$singular = ucfirst( strtolower( $singular ) );
@@ -64,8 +105,12 @@
 			add_action( 'init', [ $this, 'register' ] );
 		}
 
+		/**
+		 * Register the custom post type
+		 *
+		 * @since    1.0.0
+		 */
 		public function register() {
-
 			register_post_type( $this->post_type, $this->args );
 		}
 

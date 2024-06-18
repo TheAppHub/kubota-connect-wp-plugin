@@ -116,16 +116,17 @@ class Kubota_Connect {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kubota-connect-loader.php';
 
 		/**
-		 * The class responsible for defining custom post types used by the plugin.
+		 * The class responsible for defining creating custom post types, taxonomies and custom fields.
  		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'custom/class-kubota-connect-post_types.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'helpers/class-kubota-connect-custom-post-type.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'helpers/class-kubota-connect-custom-taxonomy.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'helpers/class-kubota-connect-carbon-fields.php';
 
 		/**
-		 * The classes responsible for defining custom fields used by the plugin.
+		 * The classes responsible for defining finance, products and highlights
  		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'helpers/class-kubota-connect-carbon-fields-class.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'custom/class-kubota-connect-custom-fields-finance.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'custom/class-kubota-connect-custom-fields-product.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kubota-connect-custom-product.php';
+		// require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kubota-connect-custom-finance.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
@@ -193,6 +194,9 @@ class Kubota_Connect {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
+		// Create custom post types 
+		$this->loader->add_action( 'init', $plugin_admin, 'create_custom_post_types' );
+
 		// Add a Kubota Connect menu item to the admin menu
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_admin_menu' );
 
@@ -217,10 +221,6 @@ class Kubota_Connect {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-
-		$plugin_cpt = new Kubota_Connect_Post_Types( $this->get_plugin_name(), $this->get_version() );
-		$this->loader->add_action( 'init', $plugin_cpt, 'create_custom_post_types' );
-
 	}
 
 	/**
