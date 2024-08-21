@@ -76,10 +76,10 @@
 
 					if (statusCode == 200) {
 						$("#successModal").removeClass("hidden");
-						$("#kc-success-msg").text(msg);
+						$("#kc-success-msg").html(msg);
 					} else {
 						$("#errorModal").removeClass("hidden");
-						$("#kc-error-msg").text(msg);
+						$("#kc-error-msg").html(msg);
 					}
 
 					$("#kc-sync-processing").addClass("hidden");
@@ -87,5 +87,19 @@
 				},
 			});
 		});
+	});
+
+	$(document).ready(function ($) {
+		// stop admin menu from collapsing when Categories is chosen
+		if (
+			$('body[class*=" post-type-kubota-products taxonomy-category"]').length
+		) {
+			$("#toplevel_page_kubota-connect")
+				.removeClass("wp-not-current-submenu")
+				.addClass("wp-has-current-submenu")
+				.addClass("wp-menu-open");
+
+			$('a:contains("Categories")').parent().addClass("current");
+		}
 	});
 })(jQuery);

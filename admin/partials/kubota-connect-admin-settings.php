@@ -154,8 +154,8 @@
         </div>
 
         <div class="w-[56rem]">
-            <select name="kc_slider_sync" class="w-72">
-                <?php $selected = $sync_options['kc_slider_sync']; ?>
+            <select name="kc_highlight_sync" class="w-72">
+                <?php $selected = $sync_options['kc_highlight_sync']; ?>
                 <option value="daily" <?php echo ($selected == 'daily') ? 'selected' : ''; ?>>Daily</option>
                 <option value="weekly" <?php echo ($selected == 'weekly') ? 'selected' : ''; ?>>Weekly</option>
                 <option value="fortnightly" <?php echo ($selected == 'fortnightly') ? 'selected' : ''; ?>>Fortnightly</option>

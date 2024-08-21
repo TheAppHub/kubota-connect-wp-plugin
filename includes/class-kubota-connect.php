@@ -125,8 +125,9 @@ class Kubota_Connect {
 		/**
 		 * The classes responsible for defining finance, products and highlights
  		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kubota-connect-custom-product.php';
-		// require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kubota-connect-custom-finance.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kubota-connect-custom-products.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kubota-connect-custom-finance.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kubota-connect-custom-highlights.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
@@ -194,9 +195,6 @@ class Kubota_Connect {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
-		// Create custom post types 
-		$this->loader->add_action( 'init', $plugin_admin, 'create_custom_post_types' );
-
 		// Add a Kubota Connect menu item to the admin menu
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_admin_menu' );
 
@@ -206,6 +204,16 @@ class Kubota_Connect {
 		// Register AJAX actions
 		$this->loader->add_action( 'wp_ajax_kubota_connect_test_connection', $plugin_admin, 'kubota_connect_test_connection' );
 		$this->loader->add_action( 'wp_ajax_kubota_connect_sync_all_data', $plugin_admin, 'kubota_connect_sync_all_data' );
+
+		// Register Custom Post Types 
+		$plugin_cpt_product = new Kubota_Connect_Product();
+		$plugin_cpt_product->register();
+
+		$plugin_cpt_finance = new Kubota_Connect_Finance();
+		$plugin_cpt_finance->register();
+
+		$plugin_cpt_highlight = new Kubota_Connect_Highlight();
+		$plugin_cpt_highlight->register();
 	}
 
 	/**

@@ -120,16 +120,6 @@ class Kubota_Connect_Admin {
 		$this->data_manager->register_options();
 	}
 
-	public function create_custom_post_types(){
-		// Create Kubota Connect products 
-		$products = new Kubota_Connect_Product();
-		$products->register();
-
-		// Create Kubota Connect finance offers
-		// $finance = new Kubota_Connect_Finance();
-		// $finance->register();
-	}
-
 	/**
 	 * Add a Kubota Connect menu item to the admin menu
 	 * 
@@ -187,6 +177,15 @@ class Kubota_Connect_Admin {
 			'manage_options',
 			'edit.php?post_type=kubota-highlights',
 		);
+
+		// Add a submenu for the Kubota Categories
+		add_submenu_page(
+			'kubota-connect',
+			'Kubota Categories',
+			'Categories',
+			'manage_options',
+			'edit-tags.php?taxonomy=category&post_type=kubota-products'
+		);
 	}
 
 	/**
@@ -240,13 +239,17 @@ class Kubota_Connect_Admin {
 	 * @since    1.0.0
 	 */
 	public function kubota_connect_sync_all_data(){
-		$token = $this->data_manager->sync_all_data();
+		$response = $this->data_manager->sync_all_data();
+
+		$statusCode = $response['statusCode'] ? $response['statusCode'] : 500;
+		$message = $response['message'] ? $response['message'] : 'The Kubota data was synced successfully!';
+
+		$result = array(
+			'statusCode' => $statusCode,
+			'message' => $message
+		);
 		
-		wp_send_json( 
-			array(
-				'statusCode' => 200,
-				'message' => 'The Kubota data was synced successfully'
-			));
+		wp_send_json( $result );		
 	}
 
 

@@ -35,7 +35,7 @@ class Kubota_Connect_Data_Manager {
 	/**
 	 * The key for the API Key Token in the database
 	 */
-	private $api_key_token = 'kc_api_key_token'; // This is the key for the API Key Token in the database
+	private $api_key_token_in_db = 'kc_api_key_token'; // This is the key for the API Key Token in the database
 
 	private $product_sync = 'kc_product_sync'; // This is the key for the Product Sync in the database
 	private $finance_sync = 'kc_finance_sync'; // This is the key for the Finance Sync in the database
@@ -47,8 +47,7 @@ class Kubota_Connect_Data_Manager {
 		$this->password_manager = new Kubota_Connect_Password_Manager();
 
 		$api_version = '1';
-		$api_key_token = $this->get_api_key_token();
-		$this->client = new Kubota_Connect_Http($api_version, $api_key_token);
+		$this->client = new Kubota_Connect_Http($api_version, $this->get_api_key_token());
 	}
 
 	/**
@@ -59,7 +58,7 @@ class Kubota_Connect_Data_Manager {
 	 * @since    1.0.0
 	 */
 	public function register_options(){
-		register_setting('kc-api-key-token', $this->api_key_token);
+		register_setting('kc-api-key-token', $this->api_key_token_in_db);
 		register_setting('kc-settings-group', $this->product_sync);
 		register_setting('kc-settings-group', $this->finance_sync);
 		register_setting('kc-settings-group', $this->finance_first_of_month);
@@ -77,12 +76,12 @@ class Kubota_Connect_Data_Manager {
 	public function get_kc_api_key_token(){
 		$hardcoded_token = $this->constant_key_is_defined();
 		if($hardcoded_token) {
-			return '************'; // Return a placeholder for the hardcoded token (12 asterisks)
+			return '************************************************'; // Return a placeholder for the hardcoded token (12 asterisks)
 		}
 
 		$token_inDB = $this->get_key_token_from_db();
 		if($token_inDB !== '') {
-			return '**********'; // Return a placeholder for the token in the database (10 asterisks)
+			return '************************************************'; // Return a placeholder for the token in the database (10 asterisks)
 		}
 
 		return '';
@@ -141,7 +140,7 @@ class Kubota_Connect_Data_Manager {
 	 */
 	private function get_defaults($option_name) {
 		$defaults = array(
-			$this->api_key_token => '',
+			$this->api_key_token_in_db => '',
 			$this->product_sync => 'monthly',
 			$this->finance_sync => 'fortnighlty',
 			$this->finance_first_of_month => '',
@@ -169,10 +168,11 @@ class Kubota_Connect_Data_Manager {
 
 			// Save the token in the database
 			$encrypt_token = $this->password_manager->encrypt($token);
-			update_option($this->api_key_token, $encrypt_token);
+			update_option($this->api_key_token_in_db, $encrypt_token);
 		} else {
+			$data->message = 'The connection to Kubota Connect was not successful. Please check your API Key Token and try again.';
 			delete_option($this->dealer_name);
-			delete_option($this->api_key_token);
+			delete_option($this->api_key_token_in_db);
 
 		}
 
@@ -185,8 +185,256 @@ class Kubota_Connect_Data_Manager {
 	 * @since    1.0.0
 	 */
 	public function sync_all_data() {
-		return $this->get_api_key_token();
+		$message = 'The Kubota data was synced successfully!<br>';
+
+		try {
+			// $ag_response = $this->sync_products('agriculture');
+			// $message .= $ag_response;
+
+			// $ce_response = $this->sync_products('construction');
+			// $message .= $ce_response;
+
+			$finance_response = $this->sync_finance();
+			$message .= $finance_response;
+
+			$highlights_response = $this->sync_highlights();
+			$message .= $highlights_response;
+		} catch (Exception $e) {
+			return array(
+				'statusCode' => 500,
+				'message' => 'The Kubota data was not synced successfully. Error: ' . $e->getMessage()
+			);
+		}
+
+		// Return the message
+		return array(
+			'statusCode' => 200,
+			'message' => $message
+		);
 	}
+
+	private function sync_products($category){
+		$post_type = 'kubota-products';
+
+		$response = $this->client->get_products($category);
+
+		$products_counter = 0;
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$this->remove_outdated($post_type, $response);
+
+		foreach($response as $product) {
+
+			$data = array(
+				'post_title' => $product->name,
+				'post_name' => $product->id,
+				'post_type' => $post_type,
+				'post_content' => $product->description,
+				'post_status' => 'publish',
+			);
+
+			// Check if the product exists in the database
+			$product_in_db = false;
+			$product_in_db = $this->post_exists_in_db($product->id, $post_type);
+			
+			if($product_in_db) {
+			// If the product exists, update the post
+				$data['ID'] = $product_in_db[0]->ID;
+				$update = wp_update_post($data, true);
+			} else {
+			// If the product does not exist, create a new post
+				$update = wp_insert_post($data, true);
+			}
+
+			$products_counter++;
+
+			if (is_wp_error($update)) {
+				return array(
+					'statusCode' => 500,
+					'message' => 'Kubota finance offers were not synced successfully. Error: ' . $update->get_error_message()
+				);
+			}
+		}
+
+		return '<strong>' . $products_counter . ' ' . $category  . ' products</strong> were created or updated.<br>';
+
+	}
+
+	private function sync_finance(){
+		$post_type = 'kubota-finance';
+
+		$response = $this->client->get_finance_offers();
+
+		$finances_counter = 0;
+
+		$this->remove_outdated($post_type, $response);
+
+		foreach($response as $finance) {
+			$data = array(
+				'post_title' => $finance->name,
+				'post_name' => $finance->id,
+				'post_type' => $post_type,
+				'post_content' => '',
+				'post_status' => 'publish',
+			);
+
+			// Check if the finance offer exists in the database
+			$finance_in_db = false;
+			$finance_in_db = $this->post_exists_in_db($finance->id, $post_type);
+			
+			if($finance_in_db) {
+			// If the finance offer exists, get the ID and update the post
+				$data['ID'] = $finance_in_db[0]->ID;
+				$post_id = wp_update_post($data, true);
+				if( has_post_thumbnail( $post_id ) ){
+					$attachment_id = get_post_thumbnail_id( $post_id );
+					wp_delete_attachment($attachment_id, true);
+				}
+			} else {
+				// If the finance offer does not exist, create a new post
+				$data['post_status'] = 'publish';
+				$post_id = wp_insert_post($data, true);
+			}
+
+		
+			if (is_wp_error($post_id)) {
+				return array(
+					'statusCode' => 500,
+					'message' => 'Kubota finance offers were not synced successfully. Error: ' . $post_id->get_error_message()
+				);
+			}
+
+			// Update custom fields 
+			// carbon_set_post_meta( $post_id , 'finance_hero_image', $finance->description );
+			if($finance->type) carbon_set_post_meta( $post_id , 'finance_type', $finance->type );
+			if($finance->rate) carbon_set_post_meta( $post_id , 'finance_comparison_rate', $finance->rate );
+			if($finance->depositInProcent) carbon_set_post_meta( $post_id , 'finance_deposit', $finance->depositInProcent );
+			if($finance->termInMonths) carbon_set_post_meta( $post_id , 'finance_term', $finance->termInMonths );
+			if($finance->terms) carbon_set_post_meta( $post_id , 'finance_additional_details', $finance->terms );
+			if($finance->rateType) carbon_set_post_meta( $post_id , 'finance_rate_type', $finance->rateType );
+	
+
+			// Update image 
+			$image_url = $finance->image->xlarge;
+			$image_id = media_sideload_image( $image_url, $post_id, $finance->name, 'id' );
+			update_post_meta( $image_id, '_wp_attachment_image_alt', $finance->name );
+			set_post_thumbnail( $post_id, $image_id );
+
+			$finances_counter++;
+		}
+
+		$message = ($finances_counter == 0) ? 'No finance offers were created or updated.<br>' : '<strong>'. $finances_counter . ' finance offers</strong> were created or updated.<br>';
+		if($finances_counter == 1) {
+			$message = '<strong>'. $finances_counter . ' finance offer</strong> was created or updated.<br>';
+		}
+		
+		return $message;
+
+	}
+
+	private function sync_highlights(){
+		$post_type = 'kubota-highlights';
+
+		$response = $this->client->get_highlights();
+
+		$highlights_counter = 0;
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		foreach($response as $highlight) {
+			$data = array(
+				'post_title' => $highlight->title,
+				'post_name' => $highlight->id,
+				'post_type' => $post_type,
+			);
+
+			// Check if the highlight exists in the database
+			$highlight_in_db = false;
+			$highlight_in_db = $this->post_exists_in_db($highlight->id, $post_type);
+			
+			if($highlight_in_db) {
+			// If the highlight exists, update the post
+				$data['ID'] = $highlight_in_db[0]->ID;
+				$post_id = wp_update_post($data, true);
+				if( has_post_thumbnail( $post_id ) ){
+					$attachment_id = get_post_thumbnail_id( $post_id );
+					wp_delete_attachment($attachment_id, true);
+				}
+			} else {
+			// If the highlight does not exist, create a new post
+				$data['post_status'] = 'publish';
+				$post_id = wp_insert_post($data, true);
+			}
+
+			if (is_wp_error($post_id)) {
+				return array(
+					'statusCode' => 500,
+					'message' => 'Kubota highlights were not synced successfully. Error: ' . $post_id->get_error_message()
+				);
+			}
+
+			// Update custom fields 
+			if($highlight->description) carbon_set_post_meta( $post_id , 'highlight_info', $highlight->description );
+			if($highlight->buttonText) carbon_set_post_meta( $post_id , 'highlight_link-text', $highlight->buttonText );
+			if($highlight->link) carbon_set_post_meta( $post_id , 'highlight_link', $highlight->link );
+			if($highlight->backgroundColour) carbon_set_post_meta( $post_id , 'highlight_color', $highlight->backgroundColour );
+
+			// Update image 
+			$image_url = $highlight->image->xlarge;
+			$image_id = media_sideload_image( $image_url, $post_id, $highlight->title, 'id' );
+			update_post_meta( $image_id, '_wp_attachment_image_alt', $highlight->title );
+			set_post_thumbnail( $post_id, $image_id );
+
+			$highlights_counter++;	
+		}
+
+		$message = ($highlights_counter == 0) ? 'No highlights were created or updated.<br>' : '<strong>'. $highlights_counter . ' highlights</strong> were created or updated.<br>';
+		if($highlights_counter == 1) {
+			$message = '<strong>'. $highlights_counter . ' highlight</strong> was created or updated.<br>';
+		}
+		
+		return $message;
+	
+	}
+
+	private function post_exists_in_db($the_slug, $post_type){
+		$args = array(
+			'name'			=> $the_slug,
+			'post_type'		=> $post_type,
+			'numberposts'	=> 1
+		  );
+
+		return get_posts($args);
+	}
+
+	private function remove_outdated($post_type, $new_data){
+		$args = array(
+			'post_type' => $post_type,
+			'numberposts' => -1
+		);
+
+		$posts = get_posts($args);
+
+		foreach($posts as $post) {
+			$found = false;
+			foreach($new_data as $data) {
+				if($post->post_name == $data->id) {
+					$found = true;
+					break;
+				}
+			}
+
+			if(!$found) {
+				wp_delete_post($post->ID, true);
+			}
+		}
+	}
+	
 
 	/**
 	 * Get the API Key Token
@@ -230,7 +478,7 @@ class Kubota_Connect_Data_Manager {
 	}
 
 	private function get_key_token_from_db(){
-		$token = get_option( $this->api_key_token, '' );
+		$token = get_option( $this->api_key_token_in_db);
 		
 		// If the value is saved in the database, decrypt the token and return it
 		if($token !== '') {

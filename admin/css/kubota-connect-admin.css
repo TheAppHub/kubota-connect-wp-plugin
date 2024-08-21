@@ -1011,6 +1011,26 @@ video {
   content: "\0041";
 }
 
+.prevent-select input,
+.prevent-select label {
+  pointer-events: none;
+}
+
+.post-type-kubota-highlights #title {
+  pointer-events: none;
+}
+
+.post-type-kubota-highlights #set-post-thumbnail-desc,
+.post-type-kubota-highlights #remove-post-thumbnail,
+.post-type-kubota-highlights #delete-action {
+  display: none;
+}
+
+.kc-post-desc {
+  background-color: #e4551c;
+  color: white;
+}
+
 .after\:absolute::after {
   content: var(--tw-content);
   position: absolute;

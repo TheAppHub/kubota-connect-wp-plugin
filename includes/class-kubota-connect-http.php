@@ -42,6 +42,7 @@ class Kubota_Connect_Http {
 
 	public function __construct( $api_version,  $api_key_token) {
 		$this->api_url = 'https://api.kubota.io/dealers/v' . $api_version . '/';
+		$this->api_key_token = $api_key_token;
 	}
 
 	/**
@@ -64,11 +65,10 @@ class Kubota_Connect_Http {
 	 * @since    1.0.0
 	 * 
 	 */
-	public function get_products() {
+	public function get_products($category = 'agriculture'): object {
 		$endpoint = 'products';
-		$data = $this->call_api( $endpoint );
 
-		return $data;
+		return $this->call_api( $endpoint, array('category' => $category));
 	}
 
 	/**
@@ -121,10 +121,18 @@ class Kubota_Connect_Http {
 	 * 
 	 */
 	public function get_finance_offers() {
-		$endpoint = 'finance';
-		$data = $this->call_api( $endpoint );
+		$all_offers = [];
 
-		return $data;
+		$endpoint = 'finance';
+		$finance = $this->call_api( $endpoint );
+		error_log(print_r($finance));
+
+		foreach ($finance as $offer) {
+			$details = $this->get_finance_offer($offer->id);
+			$all_offers[] = $details;
+		}
+
+		return $all_offers;
 	}
 
 	/**
@@ -137,9 +145,7 @@ class Kubota_Connect_Http {
 	 */
 	public function get_finance_offer( $offer_id ) {
 		$endpoint = 'finance/' . $offer_id;
-		$data = $this->call_api( $endpoint );
-
-		return $data;
+		return $this->call_api( $endpoint );
 	}
 
 	/**
@@ -148,11 +154,9 @@ class Kubota_Connect_Http {
 	 * @since    1.0.0
 	 * 
 	 */
-	public function get_slides() {
+	public function get_highlights() {
 		$endpoint = 'highlights';
-		$data = $this->call_api( $endpoint );
-
-		return $data;
+		return $this->call_api( $endpoint );
 	}
 
 
@@ -183,15 +187,12 @@ class Kubota_Connect_Http {
 		$response = wp_remote_get( $url, $args );
 
 		if ( is_wp_error( $response ) ) {
-			return $response;
+			throw new Exception( $response->get_error_message() );
 		}
 
 		$body = wp_remote_retrieve_body( $response );
-		$data = json_decode( $body );
-		$data->statusCode = wp_remote_retrieve_response_code( $response );
-		$data->token = $token;
 
-		return $data;
+		return json_decode( $body );
 	}
 
 	private function get_header($token = null){
@@ -204,5 +205,4 @@ class Kubota_Connect_Http {
 
 		return $headers;
 	}
-	
 }
