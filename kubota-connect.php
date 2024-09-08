@@ -59,15 +59,9 @@ register_activation_hook( __FILE__, 'activate_kubota_connect' );
 register_deactivation_hook( __FILE__, 'deactivate_kubota_connect' );
 
 /**
- * The core plugin class that is used to define internationalization,
- * admin-specific hooks, and public-facing site hooks.
- */
-require plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect.php';
-
- /**
  * Define Carbon Fields directory
  */
- define( 'Carbon_Fields\DIR', plugin_dir_path( __FILE__ ) . '/vendor/htmlburger/carbon-fields/' );
+define( 'Carbon_Fields\DIR', plugin_dir_path( __FILE__ ) . '/vendor/htmlburger/carbon-fields/' );
 
 /**
  * Include the Composer autoload file
@@ -75,6 +69,10 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect.php';
 if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) :
 	require_once dirname( __FILE__ ) . '/vendor/autoload.php';
 endif;
+
+add_action('after_setup_theme', function () {
+	\Carbon_Fields\Carbon_Fields::boot();
+});
 
 /**
  * Begins execution of the plugin.
@@ -87,8 +85,19 @@ endif;
  */
 function run_kubota_connect() {
 
-	$plugin = new Kubota_Connect();
-	$plugin->run();
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect.php';
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-api-client.php';
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-password-manager.php';
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-base-importer.php';
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-categories.php';
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-products.php';
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-finance-offers.php';
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-highlights.php';
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-activator.php';
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-deactivator.php';
+	require_once plugin_dir_path( __FILE__ ) . 'helpers/class-image-handler.php';
 
+	$plugin = new Kubota_Connect();
 }
+
 run_kubota_connect();

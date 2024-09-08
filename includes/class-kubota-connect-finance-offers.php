@@ -1,0 +1,181 @@
+<?php
+
+use Carbon_Fields\Container;
+use Carbon_Fields\Field;
+
+class Finance_Offer extends Base_Importer {
+    private $name = 'finance';
+
+    public function __construct($api_client) {
+        parent::__construct($api_client, $this->name, true);
+
+        // Register custom post type
+        add_action('init', [$this, 'create_custom_post_types']);
+
+        // Add custom fields 
+        add_action('carbon_fields_register_fields', [$this, 'register_fields']);
+
+        // Register shortcodes
+        add_action('init', [$this, 'register_shortcodes']);
+    }
+
+    
+    public function create_custom_post_types() {
+        register_post_type($this->name, [
+            'labels'      => ['name' => __('Kubota Finance'), 'singular_name' => __('Finance Offer')],
+            'public'      => true,
+            'has_archive' => true,
+            'rewrite'     => ['slug' => 'kubota-finance-offers'],
+            'supports'    => ['title', 'editor'],
+            'menu_icon'   => 'dashicons-money-alt',
+        ]);
+    }
+
+    public function register_fields() {
+        Container::make('post_meta', __('Finance Offer Details'))
+            ->where('post_type', '=', $this->name)
+            ->add_fields([
+                Field::make('text', 'finance_type', __('Offer Type'))
+                    ->set_attribute('readOnly', true)
+                    ->set_width( 50 ),
+                Field::make('text', 'finance_rate_type', __('Rate Type'))
+                    ->set_attribute('readOnly', true)
+                    ->set_width( 50 ),
+                Field::make('text', 'finance_rate', __('Rate in %'))
+                    ->set_attribute( 'type', 'number' )
+                    ->set_width( 30 )
+                    ->set_attribute('readOnly', true),
+                Field::make('text', 'finance_term_in_months', 'Term in months')
+                    ->set_attribute( 'type', 'number' )
+                    ->set_width( 30 )
+                    ->set_attribute('readOnly', true),
+                Field::make('text', 'finance_deposit', 'Deposit minimum in %')
+                    ->set_attribute( 'type', 'number' )
+                    ->set_width( 30 )
+                    ->set_attribute('readOnly', true),
+                Field::make('textarea', 'finance_terms', 'Terms & Conditions')
+                    ->set_rows( 5 )
+                    ->set_attribute('readOnly', true),
+            ]);
+
+        $image_handler = new Image_Handler();
+        $image_handler->create_image_field($this->name);
+
+        $hero_image_handler = new Image_Handler('hero_image');
+        $hero_image_handler->create_hero_image_field($this->name);
+    }
+
+    public function register_shortcodes() {
+        add_shortcode('kubota-connect-finance-offer-type', [$this, 'shortcode_finance_offer_type']);
+        add_shortcode('kubota-connect-finance-rate-type', [$this, 'shortcode_finance_rate_type']);
+        add_shortcode('kubota-connect-finance-rate', [$this, 'shortcode_finance_rate']);
+        add_shortcode('kubota-connect-finance-term-in-months', [$this, 'shortcode_finance_term_in_months']);
+        add_shortcode('kubota-connect-finance-deposit', [$this, 'shortcode_finance_deposit']);
+        add_shortcode('kubota-connect-finance-terms', [$this, 'shortcode_finance_terms']);
+        add_shortcode('kubota-connect-finance-offer', [$this, 'finance_offer_shortcode']);
+    }
+
+    public function shortcode_finance_offer_type($atts) {
+        $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
+        return carbon_get_post_meta($post_id, 'finance_type');
+    }
+
+    public function shortcode_finance_rate_type($atts) {
+        $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
+        return carbon_get_post_meta($post_id, 'finance_rate_type');
+    }
+
+    public function shortcode_finance_rate($atts) {
+        $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
+        return carbon_get_post_meta($post_id, 'finance_rate');
+    }
+
+    public function shortcode_finance_term_in_months($atts) {
+        $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
+        return carbon_get_post_meta($post_id, 'finance_term_in_months');
+    }
+
+    public function shortcode_finance_deposit($atts) {
+        $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
+        return carbon_get_post_meta($post_id, 'finance_deposit');
+    }
+
+    public function shortcode_finance_terms($atts) {
+        $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
+        return carbon_get_post_meta($post_id, 'finance_terms');
+    }
+
+    public function finance_offer_shortcode($atts) {
+        $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
+
+        $atts = shortcode_atts([
+            'id' => null,
+            'theme' => null,
+        ], $atts, 'finance_offer');
+
+        $title = get_the_title($post_id);
+        $offer_type = carbon_get_post_meta($post_id, 'finance_type');
+        $rate_type = carbon_get_post_meta($post_id, 'finance_rate_type');
+        $rate = carbon_get_post_meta($post_id, 'finance_rate');
+        $term = carbon_get_post_meta($post_id, 'finance_term');
+        $deposit = carbon_get_post_meta($post_id, 'finance_deposit');
+        $terms = carbon_get_post_meta($post_id, 'finance_terms');
+
+        $class_h2 = '';
+        $class_p = '';
+
+        if ($atts['theme'] === 'material') {
+            $class_h2 = 'text-lg font-semibold mb-2';
+            $class_h2 .= ' text-[#E4551C]-500';
+
+            $class_p = 'mb-4';
+            $class_p .= ' text-gray-700';
+        }
+
+        $output = "
+            <div class='finance-offer'>
+                <h2 class='$class_h2'>$title ($offer_type)</h2>
+                <p class='$class_p'>Rate Type: $rate_type</p>
+                <p class='$class_p'>Rate: $rate%</p>
+                <p class='$class_p'>Term: $term months</p>
+                <p class='$class_p'>Deposit: $deposit%</p>
+                <h3 class='$class_h2'>Terms & Conditions</h3>
+                <p class='$class_p'>$terms</p>
+            </div>
+        ";
+
+        return $output;
+    }
+
+    protected function get_endpoint() {
+        return '/finance'; // Endpoint for finance offers API
+    }
+
+    protected function save_post_meta($post_id, $item) {
+        parent::save_post_meta($post_id, $item);
+        // Add finance offer-specific meta fields
+        carbon_set_post_meta($post_id, 'finance_type', sanitize_text_field($item['type'][0]));
+        carbon_set_post_meta($post_id, 'finance_rate_type', sanitize_text_field($item['rateType']));
+        carbon_set_post_meta($post_id, 'finance_rate', sanitize_text_field($item['rate']));
+        carbon_set_post_meta($post_id, 'finance_term_in_months', sanitize_text_field($item['termInMonths']));
+        carbon_set_post_meta($post_id, 'finance_deposit', sanitize_text_field($item['depositInProcent']));
+        carbon_set_post_meta($post_id, 'finance_terms', sanitize_textarea_field($item['terms']));
+
+        $image_handler = new Image_Handler();
+        $image_urls = [
+            'small'  => $item['image']['small'],
+            'medium' => $item['image']['medium'],
+            'large'  => $item['image']['large'],
+            'xlarge' => $item['image']['xlarge']
+        ];
+        $image_handler->save_image_urls_to_post($post_id, $image_urls);
+
+        $image_urls = [
+            'small'  => $item['heroImage']['small'],
+            'medium' => $item['heroImage']['medium'],
+            'large'  => $item['heroImage']['large'],
+            'xlarge' => $item['heroImage']['xlarge']
+        ];
+        $image_handler->save_image_urls_to_post($post_id, $image_urls, 'hero-image');
+    }
+}

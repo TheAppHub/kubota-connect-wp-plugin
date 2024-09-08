@@ -30,7 +30,9 @@ class Kubota_Connect_Deactivator {
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
-
+		wp_clear_scheduled_hook('kubota-connect_import_products_event');
+		wp_clear_scheduled_hook('kubota-connect_import_finance_offers_event');
+		wp_clear_scheduled_hook('kubota-connect_import_highlights_event');
 	}
 
 }

@@ -1,32 +1,45 @@
-(function( $ ) {
-	'use strict';
+function toggleAccordion(sectionId) {
+	const content = document.getElementById(`content-${sectionId}`);
+	const icon = document.getElementById(`icon-${sectionId}`);
 
-	/**
-	 * All of the code for your public-facing JavaScript source
-	 * should reside in this file.
-	 *
-	 * Note: It has been assumed you will write jQuery code here, so the
-	 * $ function reference has been prepared for usage within the scope
-	 * of this function.
-	 *
-	 * This enables you to define handlers, for when the DOM is ready:
-	 *
-	 * $(function() {
-	 *
-	 * });
-	 *
-	 * When the window is loaded:
-	 *
-	 * $( window ).load(function() {
-	 *
-	 * });
-	 *
-	 * ...and/or other possibilities.
-	 *
-	 * Ideally, it is not considered best practise to attach more than a
-	 * single DOM-ready or window-load handler for a particular page.
-	 * Although scripts in the WordPress core, Plugins and Themes may be
-	 * practising this, we should strive to set a better example in our own work.
-	 */
+	// SVG for Minus icon
+	const minusSVG = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+        <path d="M3.75 7.25a.75.75 0 0 0 0 1.5h8.5a.75.75 0 0 0 0-1.5h-8.5Z" />
+      </svg>
+    `;
 
-})( jQuery );
+	// SVG for Plus icon
+	const plusSVG = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+        <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+      </svg>
+    `;
+
+	// Toggle the content's max-height for smooth opening and closing
+	if (content.style.maxHeight && content.style.maxHeight !== "0px") {
+		content.style.maxHeight = "0";
+		icon.innerHTML = plusSVG;
+	} else {
+		content.style.maxHeight = content.scrollHeight + "px";
+		icon.innerHTML = minusSVG;
+	}
+}
+
+function openDialog() {
+	document.getElementById("document-dialog").classList.remove("hidden");
+}
+document
+	.getElementById("document-dialog")
+	.addEventListener("click", function (e) {
+		if (e.target === this) {
+			this.classList.add("hidden");
+		}
+	});
+
+document.querySelectorAll("[data-modal-toggle]").forEach((button) => {
+	button.addEventListener("click", () => {
+		const targetId = button.getAttribute("data-modal-toggle");
+		document.getElementById(targetId).classList.toggle("hidden");
+	});
+});
