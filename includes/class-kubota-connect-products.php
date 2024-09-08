@@ -3,6 +3,14 @@
 use Carbon_Fields\Container;
 use Carbon_Fields\Field;
 
+/**
+ * Represents a product in the Kubota Connect plugin.
+ *
+ * This class extends the Base_Importer class and provides functionality for importing products.
+ *
+ * @package Kubota_Connect
+ * @subpackage Includes
+ */
 class Product extends Base_Importer {
     private $name = 'product';
 
@@ -146,82 +154,6 @@ class Product extends Base_Importer {
         ];
     }
 
-    // protected function save_post_meta($post_id, $item) {
-    //     parent::save_post_meta($post_id, $item);
-
-    //     carbon_set_post_meta($post_id, 'product_models', $item['models']);
-    //     carbon_set_post_meta($post_id, 'product_description', $item['description']);
-    //     carbon_set_post_meta($post_id, 'product_brochure', $item['brochure']);
-
-    //     // Add model data
-    //     $models = [];
-    //     foreach ($item['models'] as $model) {
-    //         $specs = [];
-    //         foreach ($model['specs'] as $spec) {
-    //             $specs[] = [
-    //                 'spec_name' => $spec['name'],
-    //                 'spec_value' => $spec['value'],
-    //                 'spec_unit' => $spec['unit'] ?? '',
-    //                 'spec_section' => $spec['section'],
-    //             ];
-    //         }
-
-    //         $models[] = [
-    //             'model_code' => $model['modelCode'],
-    //             'model_specs' => $specs,
-    //         ];
-    //     }
-    //     carbon_set_post_meta($post_id, 'product_models', $models);
-        
-    //     // Add features
-    //     $features = [];
-    //     foreach ($item['features'] as $feature) {
-    //         $features[] = [
-    //             'feature_name' => $feature['name'],
-    //             'feature_description' => $feature['description'],
-    //         ];
-    //     }
-    //     carbon_set_post_meta($post_id, 'product_features', $features);
-
-    //     // Add additional documents
-    //     $documents = [];
-    //     foreach ($item['additionalDocuments'] as $document) {
-    //         $documents[] = [
-    //             'doc_title' => $document['title'],
-    //             'doc_file' => $document['file'],
-    //         ];
-    //     }
-    //     carbon_set_post_meta($post_id, 'additional_documents', $documents);
-
-    //     // Associate product with categories
-    //     $category_ids = $this->get_category_ids($item['categories']);
-    //     if (!empty($category_ids)) {
-    //         wp_set_post_terms($post_id, $category_ids, 'kubota_category');
-    //     } else {
-    //         wp_set_post_terms($post_id, [], 'kubota_category');
-    //     }
-
-    //     // Add product-specific meta fields
-    //     $image_handler = new Image_Handler();
-
-    //     $hero_image_urls = [
-    //         'small'  => $item['heroImage']['small'],
-    //         'medium' => $item['heroImage']['medium'],
-    //         'large'  => $item['heroImage']['large'],
-    //         'xlarge' => $item['heroImage']['xlarge']
-    //     ];
-    //     $image_handler->save_image_urls_to_post($post_id, $hero_image_urls, 'hero-image');
-
-
-    //     // Add product-specific meta fields
-    //     $image_urls = [
-    //         'small'  => $item['image']['small'],
-    //         'medium' => $item['image']['medium'],
-    //         'large'  => $item['image']['large'],
-    //         'xlarge' => $item['image']['xlarge']
-    //     ];
-    //     $image_handler->save_image_urls_to_post($post_id, $image_urls, 'image');
-    // }
 
     protected function save_post_meta($post_id, $item) {
         parent::save_post_meta($post_id, $item);

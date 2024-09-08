@@ -1,4 +1,10 @@
 <?php
+/**
+ * Class Kubota_Connect
+ *
+ * This class is responsible for handling the Kubota Connect functionality.
+ * It contains methods for connecting to the Kubota API and retrieving data.
+ */
 class Kubota_Connect {
     private $plugin_name = 'kubota-connect';
     private $version = '1.0.0';
@@ -56,14 +62,31 @@ class Kubota_Connect {
         wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . '../public/css/kubota-connect-public.css', array(), $this->version, 'all' );
     }
 
+    /**
+     * Enqueues the necessary admin scripts.
+     *
+     * This method is responsible for enqueueing the required scripts for the admin area.
+     * It is called within the class `Kubota_Connect` located in the file
+     */
     public function enqueue_admin_scripts() {
         wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . '../admin/js/kubota-connect-admin.js', array(), $this->version, 'all' );
     }
 
+    /**
+     * Enqueues the public scripts.
+     *
+     * This method is responsible for enqueueing the necessary scripts for the public-facing pages of the Kubota Connect plugin.
+     * The scripts are enqueued using the WordPress `wp_enqueue_script` function.
+     *
+     * @since 1.0.0
+     */
     public function enqueue_public_scriptes() {
         wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . '../public/js/kubota-connect-public.js', array(), $this->version, 'all' );
     }
 
+    /**
+     * Creates the importer menu.
+     */
     public function importer_menu() {
         add_menu_page(
             'Kubota Connect',
@@ -76,6 +99,12 @@ class Kubota_Connect {
         );
     }
 
+    /**
+     * Displays the importer page.
+     *
+     * This method is responsible for rendering the importer page in the WordPress admin area.
+     * It is called when the corresponding menu item is clicked.
+     */
     public function importer_page() {
         if (!current_user_can('manage_options')) {
             return;
@@ -142,6 +171,12 @@ class Kubota_Connect {
                         submit_button();
                         ?>
                     </form>
+
+                    <div class="mt-4 p-4 bg-blue-100 border border-blue-200 rounded">
+                        <p class="text-blue-700">
+                            <strong>Note:</strong> The best way to store the API Key is to define it in the <code>wp-config.php</code> file for better security.
+                        </p>
+                    </div>
                     
                     <form method="post" action="options.php" class="mb-8">
                         <?php
@@ -241,6 +276,9 @@ class Kubota_Connect {
         <?php
     }
 
+    /**
+     * Registers the settings for the Kubota Connect plugin.
+     */
     public function register_settings() {
         // API Key Section
         add_settings_section(
