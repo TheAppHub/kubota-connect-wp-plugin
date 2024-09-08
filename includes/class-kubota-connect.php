@@ -171,12 +171,6 @@ class Kubota_Connect {
                         submit_button();
                         ?>
                     </form>
-
-                    <div class="mt-4 p-4 bg-blue-100 border border-blue-200 rounded">
-                        <p class="text-blue-700">
-                            <strong>Note:</strong> The best way to store the API Key is to define it in the <code>wp-config.php</code> file for better security.
-                        </p>
-                    </div>
                     
                     <form method="post" action="options.php" class="mb-8">
                         <?php
