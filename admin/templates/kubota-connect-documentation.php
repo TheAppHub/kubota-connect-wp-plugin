@@ -31,6 +31,7 @@
     <li><code>[kubota-connect-finance-rate]</code> - Displays the rate in %.</li>
     <li><code>[kubota-connect-finance-term-in-months]</code> - Displays the finance term in months.</li>
     <li><code>[kubota-connect-finance-deposit]</code> - Displays the finance minimum deposit.</li>
+    <li><code>[kubota-connect-finance-offer-expiry-date]</code> - Displays the expiry date of the offer.</li>
     <li><code>[kubota-connect-finance-terms]</code> - Displays the finance terms and conditions.</li>
     <li><code>[kubota-connect-image]</code> - Displays the finance image.</li>
     <li><code>[kubota-connect-hero-image]</code> - Displays the finance hero image.</li>

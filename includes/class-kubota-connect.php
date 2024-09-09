@@ -1,12 +1,14 @@
 <?php
 class Kubota_Connect {
+    private $plugin_name = 'kubota-connect';
+    private $version = '1.0.0';
 
     public function __construct() {
         add_action('wp_enqueue_scripts', [$this, 'enqueue_public_styles']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_public_scriptes']);
 
         // Instantiate the admin class
-        new Kubota_Connect_Admin();
+        new Kubota_Connect_Admin($this->plugin_name, $this->version);
     }
 
     public function enqueue_public_styles() {

@@ -1,7 +1,7 @@
 <?php
 class Kubota_Connect_Admin {
-    private $plugin_name = 'kubota-connect';
-    private $version = '1.0.0';
+    private $plugin_name;
+    private $version;
     private $api_key;
 
     private $product;
@@ -9,7 +9,10 @@ class Kubota_Connect_Admin {
     private $finance_offer;
     private $highlight;
 
-    public function __construct() {
+    public function __construct($plugin_name, $version) {
+        $this->plugin_name = $plugin_name;
+        $this->version = $version;
+        
         $api_client = new API_Client('https://api.kubota.io/dealers/v1');
         $this->api_key = $api_client->get_api_key();
 

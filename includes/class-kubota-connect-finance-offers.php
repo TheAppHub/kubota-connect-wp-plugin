@@ -71,6 +71,7 @@ class Finance_Offer extends Base_Importer {
     public function register_shortcodes() {
         add_shortcode('kubota-connect-finance-offer-type', [$this, 'shortcode_finance_offer_type']);
         add_shortcode('kubota-connect-finance-rate-type', [$this, 'shortcode_finance_rate_type']);
+        add_shortcode('kubota-connect-finance-offer-expiry-date', [$this, 'shortcode_finance_expiry_date']);
         add_shortcode('kubota-connect-finance-rate', [$this, 'shortcode_finance_rate']);
         add_shortcode('kubota-connect-finance-term-in-months', [$this, 'shortcode_finance_term_in_months']);
         add_shortcode('kubota-connect-finance-deposit', [$this, 'shortcode_finance_deposit']);
@@ -86,6 +87,11 @@ class Finance_Offer extends Base_Importer {
     public function shortcode_finance_rate_type($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
         return carbon_get_post_meta($post_id, 'finance_rate_type');
+    }
+
+    public function shortcode_finance_expiry_date($atts) {
+        $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
+        return carbon_get_post_meta($post_id, 'offer_expiry_date');
     }
 
     public function shortcode_finance_rate($atts) {
@@ -119,6 +125,7 @@ class Finance_Offer extends Base_Importer {
         $title = get_the_title($post_id);
         $offer_type = carbon_get_post_meta($post_id, 'finance_type');
         $rate_type = carbon_get_post_meta($post_id, 'finance_rate_type');
+        $expiry_date = carbon_get_post_meta($post_id, 'offer_expiry_date');
         $rate = carbon_get_post_meta($post_id, 'finance_rate');
         $term = carbon_get_post_meta($post_id, 'finance_term');
         $deposit = carbon_get_post_meta($post_id, 'finance_deposit');
@@ -142,6 +149,7 @@ class Finance_Offer extends Base_Importer {
                 <p class='$class_p'>Rate: $rate%</p>
                 <p class='$class_p'>Term: $term months</p>
                 <p class='$class_p'>Deposit: $deposit%</p>
+                <p class='$class_p'>Expiry Date: $expiry_date</p>
                 <h3 class='$class_h2'>Terms & Conditions</h3>
                 <p class='$class_p'>$terms</p>
             </div>
@@ -163,6 +171,7 @@ class Finance_Offer extends Base_Importer {
         carbon_set_post_meta($post_id, 'finance_term_in_months', sanitize_text_field($item['termInMonths']));
         carbon_set_post_meta($post_id, 'finance_deposit', sanitize_text_field($item['depositInProcent']));
         carbon_set_post_meta($post_id, 'finance_terms', sanitize_textarea_field($item['terms']));
+        carbon_set_post_meta($post_id, 'offer_expiry_date', sanitize_textarea_field($item['offerExpiryDate']));
 
         $image_handler = new Image_Handler();
         $image_urls = [
