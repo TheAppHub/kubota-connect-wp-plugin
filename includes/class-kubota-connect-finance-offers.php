@@ -37,10 +37,13 @@ class Finance_Offer extends Base_Importer {
             ->add_fields([
                 Field::make('text', 'finance_type', __('Offer Type'))
                     ->set_attribute('readOnly', true)
-                    ->set_width( 50 ),
+                    ->set_width( 30 ),
                 Field::make('text', 'finance_rate_type', __('Rate Type'))
                     ->set_attribute('readOnly', true)
-                    ->set_width( 50 ),
+                    ->set_width( 30 ),
+                Field::make('text', 'offer_expiry_date', 'Offer Expiry Date')
+                    ->set_width(30)
+                    ->set_attribute('readOnly', true),
                 Field::make('text', 'finance_rate', __('Rate in %'))
                     ->set_attribute( 'type', 'number' )
                     ->set_width( 30 )

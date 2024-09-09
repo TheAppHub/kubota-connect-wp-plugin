@@ -1,13 +1,10 @@
 <?php
 class API_Client {
-    private $password_manager;
     private $api_url;
     private $api_key;
 
 
-    public function __construct($api_url, $password_manager) {
-        $this->password_manager = $password_manager;
-
+    public function __construct($api_url) {
         $this->api_url = $api_url;
         $this->api_key = $this->get_api_key();
     }
@@ -20,8 +17,6 @@ class API_Client {
 
         // Retrieve API key from the database
         return get_option('kc_api_key', '');
-        // $encrypted_api_key = get_option('kc_api_key', '');
-        // return $this->password_manager->decrypt($encrypted_api_key);
     }
 
     public function fetch_data($endpoint) {

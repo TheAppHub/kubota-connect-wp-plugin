@@ -11,36 +11,54 @@
         <div class="mb-4 border-b border-gray-200">
             <nav class="flex">
                 <button id="settings-tab" class="text-gray-600 py-2 px-4 block focus:outline-none hover:bg-gray-100 active:bg-gray-200">Settings</button>
+                <button id="api-key-tab" class="text-gray-600 py-2 px-4 block focus:outline-none hover:bg-gray-100 active:bg-gray-200">API Key</button>
                 <button id="documentation-tab" class="text-gray-600 py-2 px-4 block focus:outline-none hover:bg-gray-100 active:bg-gray-200">Documentation</button>
             </nav>
         </div>
-        <div id="settings-content" class="tab-content">
-            <?php include 'kubota-connect-settings.php'; ?>
-        </div>
-        <div id="documentation-content" class="tab-content hidden">
-            <?php include 'kubota-connect-documentation.php'; ?>
+        <div class="w-full max-w-5xl">
+            <div id="settings-content" class="tab-content">
+                <?php include 'kubota-connect-settings.php'; ?>
+            </div>
+            <div id="api-key-content" class="tab-content hidden">
+                <?php include 'kubota-connect-api-key.php'; ?>
+            </div>
+            <div id="documentation-content" class="tab-content hidden">
+                <?php include 'kubota-connect-documentation.php'; ?>
+            </div>
         </div>
     </div>
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        const apiKeyTab = document.getElementById('api-key-tab');
         const settingsTab = document.getElementById('settings-tab');
         const documentationTab = document.getElementById('documentation-tab');
+        const apiKeyContent = document.getElementById('api-key-content');
         const settingsContent = document.getElementById('settings-content');
         const documentationContent = document.getElementById('documentation-content');
 
-        settingsTab.addEventListener('click', function () {
-            settingsTab.classList.add('active');
+        function activateTab(tab, content) {
+            apiKeyTab.classList.remove('active');
+            settingsTab.classList.remove('active');
             documentationTab.classList.remove('active');
-            settingsContent.classList.remove('hidden');
+            apiKeyContent.classList.add('hidden');
+            settingsContent.classList.add('hidden');
             documentationContent.classList.add('hidden');
+
+            tab.classList.add('active');
+            content.classList.remove('hidden');
+        }
+
+        apiKeyTab.addEventListener('click', function () {
+            activateTab(apiKeyTab, apiKeyContent);
+        });
+
+        settingsTab.addEventListener('click', function () {
+            activateTab(settingsTab, settingsContent);
         });
 
         documentationTab.addEventListener('click', function () {
-            documentationTab.classList.add('active');
-            settingsTab.classList.remove('active');
-            documentationContent.classList.remove('hidden');
-            settingsContent.classList.add('hidden');
+            activateTab(documentationTab, documentationContent);
         });
     });
 </script>

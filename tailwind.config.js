@@ -5,14 +5,11 @@ module.exports = withMT({
 	content: [
 		"./admin/js/**/*.js",
 		"./admin/css/**/*.css",
-		"./admin/*.php",
+		"./admin/**/*.php",
 		"./public/js/**/*.js",
 		"./public/css/**/*.css",
-		"./public/*.php",
-		"./includes/class-kubota-connect.php",
-		"./includes/class-kubota-connect-products.php",
-		"./includes/class-kubota-connect-highlights.php",
-		"./includes/class-kubota-connect-finance-offers.php",
+		"./public/**/*.php",
+		"./includes/*.php",
 	],
 	theme: {
 		extend: {
