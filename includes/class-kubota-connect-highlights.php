@@ -72,29 +72,72 @@ class Highlight extends Base_Importer {
     }
 
     public function register_shortcodes() {
-        add_shortcode('kubota-connect-description', [$this, 'shortcode_description']);
-        add_shortcode('kubota-connect-button-text', [$this, 'shortcode_button_text']);
-        add_shortcode('kubota-connect-background-colour', [$this, 'shortcode_background_colour']);
-        add_shortcode('kubota-connect-link', [$this, 'shortcode_link']);
+        add_shortcode('kubota-connect-hightlight-description', [$this, 'shortcode_description']);
+        add_shortcode('kubota-connect-hightlight-button-text', [$this, 'shortcode_button_text']);
+        add_shortcode('kubota-connect-hightlight-background-colour', [$this, 'shortcode_background_colour']);
+        add_shortcode('kubota-connect-hightlight-link', [$this, 'shortcode_link']);
+        add_shortcode('kubota-connect-hightlight-slider', [$this, 'shortcode_highlight_slider']);
     }
 
     public function shortcode_description($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
-        return carbon_get_post_meta($post_id, 'description');
+        return esc_html(carbon_get_post_meta($post_id, 'description'));
     }
 
     public function shortcode_button_text($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
-        return carbon_get_post_meta($post_id, 'button_text');
+        return esc_html(carbon_get_post_meta($post_id, 'button_text'));
     }
 
     public function shortcode_background_colour($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
-        return carbon_get_post_meta($post_id, 'background_colour');
+        return esc_html(carbon_get_post_meta($post_id, 'background_colour'));
     }
 
     public function shortcode_link($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
-        return carbon_get_post_meta($post_id, 'link');
+        return esc_url(carbon_get_post_meta($post_id, 'link'));
     }
+
+    public function shortcode_highlight_slider($atts) {
+            // Register Swiper
+            wp_register_style('SwiperCSS', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css');
+            wp_register_script('SwiperJS', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', [], false, true);
+            // Enqueue Swiper
+            wp_enqueue_style('SwiperCSS');
+            wp_enqueue_script('SwiperJS');
+    
+            $query = new WP_Query([
+                'post_type'      => $this->name,
+                'posts_per_page' => -1,
+            ]);
+    
+            ob_start();
+            include plugin_dir_path(__FILE__) . '../public/templates/highlight-slider-template.php';
+            $output = ob_get_clean();
+    
+            $script = '
+                var swiper = new Swiper(".kubota-highlight-slider", {
+                    slidesPerView: 1,
+                    loop: true,
+                    speed: 600,
+                    effect: "fade",
+                    autoplay: {
+                        delay: 5000,
+                    },
+                    pagination: {
+                        el: ".swiper-pagination",
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: ".swiper-button-next",
+                        prevEl: ".swiper-button-prev",
+                    },
+                });
+            ';
+
+            wp_add_inline_script('SwiperJS', $script,'after');
+    
+            return $output;
+        }
 } 

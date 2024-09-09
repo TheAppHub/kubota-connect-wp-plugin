@@ -140,7 +140,7 @@ class Finance_Offer extends Base_Importer {
 
         if ($atts['theme'] === 'material') {
             $class_h2 = 'text-lg font-semibold mb-2';
-            $class_h2 .= ' text-[#E4551C]-500';
+            $class_h2 .= ' text-[#E4551C]';
 
             $class_p = 'mb-4';
             $class_p .= ' text-gray-700';
