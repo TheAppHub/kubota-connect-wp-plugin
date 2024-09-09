@@ -23,6 +23,7 @@
     <li class="text-gray-600"><code>[kubota-connect-highlight-title]</code> - Displays the highlight title.</li>
     <li class="text-gray-600"><code>[kubota-connect-highlight-description]</code> - Displays the highlight description.</li>
     <li class="text-gray-600"><code>[kubota-connect-image]</code> - Displays the highlight image.</li>
+    <li class="text-gray-600"><code>[kubota-connect-hightlight-slider]</code> - Displays a predesigned slider of highlights</li>
 </ul>
 <h3 class="text-lg font-semibold mt-4 mb-2">Finance Offers Shortcodes</h3>
 <ul class="list-disc list-inside ">

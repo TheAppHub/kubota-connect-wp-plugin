@@ -85,10 +85,11 @@ add_action('after_setup_theme', function () {
  */
 function run_kubota_connect() {
 
+	require_once plugin_dir_path( __FILE__ ) . 'helpers/class-kubota-connect-base-importer.php';
+	require_once plugin_dir_path( __FILE__ ) . 'helpers/class-image-handler.php';
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect.php';
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-api-client.php';
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-password-manager.php';
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-base-importer.php';
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-categories.php';
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-products.php';
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-finance-offers.php';
@@ -97,7 +98,6 @@ function run_kubota_connect() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-deactivator.php';
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-cron-jobs.php';
 	require_once plugin_dir_path( __FILE__ ) . 'admin/class-kubota-connect-admin.php';
-	require_once plugin_dir_path( __FILE__ ) . 'helpers/class-image-handler.php';
 
 	$plugin = new Kubota_Connect();
 }
