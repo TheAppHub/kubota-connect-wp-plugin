@@ -81,37 +81,39 @@ class Finance_Offer extends Base_Importer {
 
     public function shortcode_finance_offer_type($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
-        return carbon_get_post_meta($post_id, 'finance_type');
+        return esc_html(carbon_get_post_meta($post_id, 'finance_type'));
     }
 
     public function shortcode_finance_rate_type($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
-        return carbon_get_post_meta($post_id, 'finance_rate_type');
+        return esc_html(carbon_get_post_meta($post_id, 'finance_rate_type'));
     }
 
     public function shortcode_finance_expiry_date($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
-        return carbon_get_post_meta($post_id, 'offer_expiry_date');
+        $expiry_date = carbon_get_post_meta($post_id, 'offer_expiry_date');
+        $formatted_date = date('d/m/Y', strtotime($expiry_date));
+        return esc_html($formatted_date);
     }
 
     public function shortcode_finance_rate($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
-        return carbon_get_post_meta($post_id, 'finance_rate');
+        return esc_html(carbon_get_post_meta($post_id, 'finance_rate'));
     }
 
     public function shortcode_finance_term_in_months($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
-        return carbon_get_post_meta($post_id, 'finance_term_in_months');
+        return esc_html(carbon_get_post_meta($post_id, 'finance_term_in_months'));
     }
 
     public function shortcode_finance_deposit($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
-        return carbon_get_post_meta($post_id, 'finance_deposit');
+        return esc_html(carbon_get_post_meta($post_id, 'finance_deposit'));
     }
 
     public function shortcode_finance_terms($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
-        return carbon_get_post_meta($post_id, 'finance_terms');
+        return esc_html(carbon_get_post_meta($post_id, 'finance_terms'));
     }
 
     public function finance_offer_shortcode($atts) {
@@ -125,11 +127,13 @@ class Finance_Offer extends Base_Importer {
         $title = get_the_title($post_id);
         $offer_type = carbon_get_post_meta($post_id, 'finance_type');
         $rate_type = carbon_get_post_meta($post_id, 'finance_rate_type');
-        $expiry_date = carbon_get_post_meta($post_id, 'offer_expiry_date');
         $rate = carbon_get_post_meta($post_id, 'finance_rate');
-        $term = carbon_get_post_meta($post_id, 'finance_term');
+        $term = carbon_get_post_meta($post_id, 'finance_term_in_months');
         $deposit = carbon_get_post_meta($post_id, 'finance_deposit');
         $terms = carbon_get_post_meta($post_id, 'finance_terms');
+
+        $expiry_date = carbon_get_post_meta($post_id, 'offer_expiry_date');
+        $formatted_date = date('d/m/Y', strtotime($expiry_date));
 
         $class_h2 = '';
         $class_p = '';
@@ -144,14 +148,14 @@ class Finance_Offer extends Base_Importer {
 
         $output = "
             <div class='finance-offer'>
-                <h2 class='$class_h2'>$title ($offer_type)</h2>
-                <p class='$class_p'>Rate Type: $rate_type</p>
-                <p class='$class_p'>Rate: $rate%</p>
-                <p class='$class_p'>Term: $term months</p>
-                <p class='$class_p'>Deposit: $deposit%</p>
-                <p class='$class_p'>Expiry Date: $expiry_date</p>
-                <h3 class='$class_h2'>Terms & Conditions</h3>
-                <p class='$class_p'>$terms</p>
+            <h2 class='$class_h2'>" . esc_html($title) . " (" . esc_html($offer_type) . ")</h2>
+            <p class='$class_p'>Rate Type: " . esc_html($rate_type) . "</p>
+            <p class='$class_p'>Rate: " . esc_html($rate) . "%</p>
+            <p class='$class_p'>Term: " . esc_html($term) . " months</p>
+            <p class='$class_p'>Deposit: " . esc_html($deposit) . "%</p>
+            <p class='$class_p'>Expiry Date: " . esc_html($formatted_date) . "</p>
+            <h3 class='$class_h2'>Terms & Conditions</h3>
+            <p class='$class_p'>" . esc_html($terms) . "</p>
             </div>
         ";
 
