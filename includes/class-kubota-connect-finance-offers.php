@@ -4,7 +4,7 @@ use Carbon_Fields\Container;
 use Carbon_Fields\Field;
 
 class Finance_Offer extends Base_Importer {
-    private $name = 'finance';
+    private $name = 'kubota-finance';
 
     public function __construct($api_client) {
         parent::__construct($api_client, $this->name, true);

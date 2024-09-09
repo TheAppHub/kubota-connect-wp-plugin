@@ -12,7 +12,7 @@ use Carbon_Fields\Field;
  * @subpackage Includes
  */
 class Product extends Base_Importer {
-    private $name = 'product';
+    private $name = 'kubota-product';
 
     public function __construct($api_client) {
         parent::__construct($api_client, $this->name, true);
@@ -23,7 +23,7 @@ class Product extends Base_Importer {
         // Add custom fields 
         add_action('carbon_fields_register_fields', [$this, 'register_product_fields']);
         add_action('carbon_fields_register_fields', [$this, 'register_model_fields']);
-        add_action('carbon_fields_register_fields', [$this, 'register_product_template_field']);
+        // add_action('carbon_fields_register_fields', [$this, 'register_product_template_field']);
 
         // Register shortcodes
         add_action('init', [$this, 'register_shortcodes']);
@@ -35,7 +35,7 @@ class Product extends Base_Importer {
     }
 
     public function create_custom_post_type() {
-        register_post_type('product', [
+        register_post_type($this->name, [
             'labels'      => ['name' => __('Kubota Products'), 'singular_name' => __('Product')],
             'public'      => true,
             'has_archive' => true,
@@ -141,6 +141,15 @@ class Product extends Base_Importer {
         add_shortcode('kubota-connect-product-documents', [$this, 'shortcode_product_documents']);
         add_shortcode('kubota-connect-product-model-names', [$this, 'shortcode_product_model_names']);
         add_shortcode('kubota-connect-product-specs-table', [$this, 'shortcode_product_models_table']);
+    }
+
+    public function import() {
+        // Import categories first using the Kubota_Connect_Category class
+        $category_importer = new Kubota_Connect_Category($this->api_client, 'product_category');
+        $category_importer->import();
+
+        // Then import products
+        parent::import();
     }
 
     protected function get_endpoint() {
@@ -396,7 +405,6 @@ class Product extends Base_Importer {
     
         return $output;
     }
-    
     
     
     public function shortcode_product_model_names($atts) {

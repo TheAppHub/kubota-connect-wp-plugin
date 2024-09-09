@@ -95,6 +95,7 @@ function run_kubota_connect() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-highlights.php';
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-activator.php';
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-deactivator.php';
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-cron-jobs.php';
 	require_once plugin_dir_path( __FILE__ ) . 'admin/class-kubota-connect-admin.php';
 	require_once plugin_dir_path( __FILE__ ) . 'helpers/class-image-handler.php';
 

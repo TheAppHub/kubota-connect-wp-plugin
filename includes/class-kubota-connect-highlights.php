@@ -4,7 +4,7 @@ use Carbon_Fields\Container;
 use Carbon_Fields\Field;
 
 class Highlight extends Base_Importer {
-    private $name = 'highlight';
+    private $name = 'kubota-highlight';
 
     public function __construct($api_client) {
         parent::__construct($api_client, $this->name);

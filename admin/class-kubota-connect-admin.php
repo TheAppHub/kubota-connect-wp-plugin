@@ -21,19 +21,13 @@ class Kubota_Connect_Admin {
         $this->finance_offer = new Finance_Offer($api_client, 'finance_offer');
         $this->highlight = new Highlight($api_client, 'highlights');
 
-
         add_action('admin_menu', [$this, 'importer_menu']);
         add_action('admin_init', [$this, 'register_settings']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_styles']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
-    
-        if ($this->api_key) {
-            add_action('init', [$this, 'schedule_cron_jobs']);
-            add_action('kubota-connect_import_products_event', [$this->product, 'import']);
-            add_action('kubota-connect_import_categories_event', [$this->category, 'import']);
-            add_action('kubota-connect_import_finance_offers_event', [$this->finance_offer, 'import']);
-            add_action('kubota-connect_import_highlights_event', [$this->highlight, 'import']);
-        }
+
+        // Initialize the cron jobs
+        new Kubota_Connect_Cron($this->api_key);
     }
 
     public function importer_menu() {
@@ -183,41 +177,5 @@ class Kubota_Connect_Admin {
 
     public function enqueue_admin_scripts() {
         wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . '../admin/js/kubota-connect-admin.js', array(), $this->version, 'all');
-    }
-
-    public function schedule_cron_jobs() {
-        $this->schedule_single_cron_job('category', 'kubota-connect_import_categories_event');
-        $this->schedule_single_cron_job('product', 'kubota-connect_import_products_event');
-        $this->schedule_single_cron_job('finance_offer', 'kubota-connect_import_finance_offers_event');
-        $this->schedule_single_cron_job('highlight', 'kubota-connect_import_highlights_event');
-    }
-
-    private function schedule_single_cron_job($cpt, $hook) {
-        $schedule = get_option($cpt . '_schedule', 'daily');
-
-        $timestamp = wp_next_scheduled($hook);
-        if ($timestamp) {
-            wp_unschedule_event($timestamp, $hook);
-        }
-
-        $next_run_time = $this->get_next_run_time($schedule);
-        wp_schedule_event($next_run_time, $schedule, $hook);
-    }
-
-    private function get_next_run_time($schedule) {
-        $current_time = current_time('timestamp');
-
-        if ($schedule === 'monthly') {
-            $next_run_time = strtotime('first day of next month 04:00:00');
-        } elseif ($schedule === 'fortnightly') {
-            $next_run_time = strtotime('first day of next month 04:00:00');
-            if ($current_time > $next_run_time) {
-                $next_run_time = strtotime('+14 days', $next_run_time);
-            }
-        } else {
-            $next_run_time = strtotime('04:00:00 tomorrow');
-        }
-
-        return $next_run_time;
     }
 }

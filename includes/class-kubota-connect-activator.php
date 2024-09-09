@@ -31,6 +31,7 @@ class Kubota_Connect_Activator {
 	 */
 	public static function activate() {
 		add_filter('cron_schedules', [self::class, 'add_custom_schedules']);
+		self::set_default_import_schedules();
 	}
 
 	function add_custom_schedules() {
@@ -50,4 +51,21 @@ class Kubota_Connect_Activator {
 	
 		return $schedules;
 	}
+
+	/**
+     * Set default import schedules for Kubota products, finance offers, and highlights.
+     *
+     * @since    1.0.0
+     */
+    public static function set_default_import_schedules() {
+        if (get_option('kubota-product_schedule') === false) {
+            update_option('kubota-product_schedule', 'monthly');
+        }
+        if (get_option('kubota-finance_offer_schedule') === false) {
+            update_option('kubota-finance_offer_schedule', 'weekly');
+        }
+        if (get_option('kubota-highlight_schedule') === false) {
+            update_option('kubota-highlight_schedule', 'weekly');
+        }
+    }
 }

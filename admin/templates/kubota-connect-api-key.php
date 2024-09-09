@@ -7,15 +7,15 @@
 
     <h2 class="text-xl font-bold text-gray-800 mb-4">Important: Secure Storage of API Keys</h2>
     
-    <p class="text-gray-700 mb-2">
+    <p class="text-gray-600 mb-2">
         Storing API keys in the database is not recommended due to potential security vulnerabilities. If your site is ever compromised, attackers could easily access your API keys, potentially exposing sensitive data.
     </p>
 
-    <p class="text-gray-700 mb-2">
+    <p class="text-gray-600 mb-2">
         To improve security, we recommend defining your API keys directly in the <code class="bg-gray-200 p-1 rounded">wp-config.php</code> file. This keeps your keys out of the database and makes them less accessible to potential attackers.
     </p>
 
-    <p class="text-gray-700 mb-4">
+    <p class="text-gray-600 mb-4">
         Below is an example of how to define the <code class="bg-gray-200 p-1 rounded">KC_API_KEY_TOKEN</code> in your <code class="bg-gray-200 p-1 rounded">wp-config.php</code> file:
     </p>
 
