@@ -20,7 +20,7 @@ class Kubota_Connect_Category extends Base_Importer {
     }
 
     public function create_custom_taxonomies() {
-        register_taxonomy('kubota_category', 'product', [
+        register_taxonomy('kubota_category', 'kubota-product', [
             'labels' => [
                 'name'          => 'Kubota Categories',
                 'singular_name' => 'Kubota Category',
