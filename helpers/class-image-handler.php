@@ -33,7 +33,10 @@ class Image_Handler {
      * Retrieve image URLs from the database based on the image type.
      */
     private function retrieve_image_urls($image_type, $id = null) {
-        $post_id = ($id) ? $id : get_the_ID();
+        $post_id = $id;
+        if(!$id){
+            $post_id = get_the_ID();
+        }
 
         if ($post_id) {
             $this->image_urls['small']  = carbon_get_post_meta($post_id, $image_type . '_small');
