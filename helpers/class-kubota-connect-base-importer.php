@@ -58,40 +58,6 @@ class Base_Importer {
         return true;
     }
 
-    // public function import() {
-    //     $all_data = [];
-    //     $parameters = $this->get_endpoint_parameters();
-
-    //     // Loop through each parameter and fetch data
-    //     foreach ($parameters as $param) {
-    //         $endpoint = $this->combine_endpoint_and_parameters($this->get_endpoint(), $param);
-    //         $data = $this->api_client->fetch_data($endpoint);
-
-    //         if (is_wp_error($data)) {
-    //             // Handle and display API error message
-    //             echo '<div class="notice notice-error"><p><strong>Error:</strong> ' . esc_html($data->get_error_message()) . '</p></div>';
-    //             continue;
-    //         }
-
-    //         $all_data = array_merge($all_data, $data);
-    //     }
-
-    //     foreach ($all_data as $item) {
-    //         if ($this->fetch_details) {
-    //             $item = $this->fetch_item_details($item['id']);
-    //             if (is_wp_error($item)) {
-    //                 // Handle and display API error message for individual item
-    //                 echo '<div class="notice notice-error"><p><strong>Error:</strong> ' . esc_html($item->get_error_message()) . '</p></div>';
-    //                 continue;
-    //             }
-    //         }
-    //         $this->process_item($item);
-    //     }
-
-    //     $this->remove_deleted_items($all_data);
-
-    //     return true;
-    // }
 
     protected function fetch_item_details($id) {
         $endpoint = $this->get_item_details_endpoint($id);

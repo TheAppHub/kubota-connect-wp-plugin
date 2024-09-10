@@ -73,6 +73,12 @@ class Image_Handler {
         }
     }
 
+    public function save_image_urls_to_term($term_id, $image_urls, $image_type = 'image') {
+        foreach ($image_urls as $size => $url) {
+            carbon_set_term_meta($term_id, $image_type . '_' . $size, esc_url_raw($url));
+        }
+    }
+
     public function create_image_field($post_type) {
         return Container::make('post_meta', __('Image'))
             ->set_context( 'side' )

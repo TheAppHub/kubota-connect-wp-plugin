@@ -39,8 +39,8 @@ class Kubota_Connect_Category extends Base_Importer {
                     ->set_help_text('This description is provided by the Kubota. Please do not edit, as this will be overwritten when the API is next contacted. If you would like to add additional information, please add it to the "Description" field above.'),
             ]);
 
-        // $image_handler = new Image_Handler();
-        // $image_handler->create_category_image_field();
+        $image_handler = new Image_Handler();
+        $image_handler->create_category_image_field();
     }
 
     public function import() {
@@ -79,9 +79,21 @@ class Kubota_Connect_Category extends Base_Importer {
                 'parent'      => $parent_id,
             ]);
 
-            // Update Carbon Fields custom field
             carbon_set_term_meta($existing_category->term_id, 'kubota_category_description', $description);
-        } else {
+
+
+            if($category_data['image']){
+                // Add product-specific meta fields
+                $image_handler = new Image_Handler();
+                $image_urls = [
+                    'small'  => $category_data['image']['small'],
+                    'medium' => $category_data['image']['medium'],
+                    'large'  => $category_data['image']['large'],
+                    'xlarge' => $category_data['image']['xlarge']
+                ];
+                $image_handler->save_image_urls_to_term($existing_category->term_id, $image_urls, 'image');
+            }    
+         } else {
             $new_category = wp_insert_term($category_data['name'], 'kubota_category', [
                 'slug'        => $category_data['id'],
                 'parent'      => $parent_id,
@@ -91,6 +103,18 @@ class Kubota_Connect_Category extends Base_Importer {
 
             // Set Carbon Fields custom field for the new category
             carbon_set_term_meta($new_category_id, 'kubota_category_description', $description);
+
+            if($category_data['image']){
+            // Add product-specific meta fields
+                $image_handler = new Image_Handler();
+                $image_urls = [
+                    'small'  => $category_data['image']['small'],
+                    'medium' => $category_data['image']['medium'],
+                    'large'  => $category_data['image']['large'],
+                    'xlarge' => $category_data['image']['xlarge']
+                ];
+                $image_handler->save_image_urls_to_term($new_category_id, $image_urls, 'image');
+            }
         }
 
         // Recursively import subcategories
