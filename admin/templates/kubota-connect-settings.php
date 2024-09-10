@@ -8,10 +8,117 @@
 <p class="text-sm text-gray-600 mb-4">Click the buttons below to manually import data from the Kubota Connect API. You can import Kubota products, finance offers, and highlights. Please note that you need to enter your API Key Token to enable data imports.</p>
 
 <form method="post" action="" class="mb-8">
-    <input type="submit" name="import_products" class="button-primary mb-2" value="Import Products" <?php disabled(!$this->api_key); ?>>
-    <input type="submit" name="import_finance_offers" class="button-primary mb-2" value="Import Finance Offers" <?php disabled(!$this->api_key); ?>>
-    <input type="submit" name="import_highlights" class="button-primary mb-2" value="Import Highlights" <?php disabled(!$this->api_key); ?>>
+    <button type="submit" name="import_products" class="button-primary mb-2 relative w-40 h-10 flex items-center justify-center" <?php disabled(!$this->api_key); ?>>   
+        <span class="button-text opacity-100 visible">Import Products</span>
+        <div class="loading-spinner absolute inset-0 flex items-center justify-center opacity-0 invisible">
+            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="ml-2">Importing...</span>   
+        </div>
+    </button>
+
+    <button type="submit" name="import_finance_offers" class="button-primary mb-2 relative w-40 h-10 flex items-center justify-center" <?php disabled(!$this->api_key); ?>>
+        <span class="button-text opacity-100 visible">Import Finance Offers</span>
+        <div class="loading-spinner absolute inset-0 flex items-center justify-center opacity-0 invisible">
+            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="ml-2">Importing...</span>   
+        </div>
+    </button>
+
+    <button type="submit" name="import_highlights" class="button-primary mb-2 relative w-40 h-10 flex items-center justify-center" <?php disabled(!$this->api_key); ?>>
+        <span class="button-text opacity-100 visible">Import Highlights</span>
+        <div class="loading-spinner absolute inset-0 flex items-center justify-center opacity-0 invisible">
+            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="ml-2">Importing...</span>   
+        </div>
+    </button>
 </form>
+
+<script>
+    document.querySelectorAll('form button[type="submit"]').forEach(button => {
+        button.addEventListener('click', function() {
+            const spinner = this.querySelector('.loading-spinner');
+            const buttonText = this.querySelector('.button-text');
+            spinner.classList.remove('opacity-0', 'invisible');
+            spinner.classList.add('opacity-100', 'visible');
+            buttonText.classList.add('opacity-0', 'invisible');
+        });
+    });
+</script>
+
+
+
+<!-- <form method="post" action="" class="mb-8">
+    <button type="submit" name="import_products" class="button-primary mb-2 relative w-40" <?php disabled(!$this->api_key); ?>>
+        <span class="button-text">Import Products</span>
+        <div class="loading-spinner hidden absolute inset-0 flex items-center justify-center">
+            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="ml-2">
+                Importing...
+            </span>   
+        </div>
+    </button>
+    <button type="submit" name="import_finance_offers" class="button-primary mb-2 relative w-40" <?php disabled(!$this->api_key); ?>>
+        <span class="button-text">Import Finance Offers</span>
+        <div class="loading-spinner hidden absolute inset-0 flex items-center justify-center">
+            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="ml-2">
+                Importing...
+            </span>   
+        </div>
+    </button>
+    <button type="submit" name="import_highlights" class="button-primary mb-2 relative w-40" <?php disabled(!$this->api_key); ?>>
+        <span class="button-text">Import Highlights</span>
+        <div class="loading-spinner hidden absolute inset-0 flex items-center justify-center">
+            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="ml-2">
+                Importing...
+            </span>   
+        </div>
+    </button>
+
+    <button type="submit" name="import_highlights" class="button-primary mb-2 relative w-40" <?php disabled(!$this->api_key); ?>>
+    <span class="button-text hidden">Import Highlights</span>
+    <div class="loading-spinner absolute inset-0 flex items-center justify-center">
+        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span class="ml-2">
+            Importing...
+        </span>   
+    </div>
+</button>
+
+</form>
+
+<script>
+    document.querySelectorAll('form button[type="submit"]').forEach(button => {
+        button.addEventListener('click', function() {
+            const spinner = this.querySelector('.loading-spinner');
+            const buttonText = this.querySelector('.button-text');
+            spinner.classList.remove('hidden');
+            buttonText.classList.add('hidden');
+        });
+    });
+</script> -->
 
 <form method="post" action="options.php" class="mb-8">
     <?php
