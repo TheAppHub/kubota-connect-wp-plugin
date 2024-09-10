@@ -3,20 +3,9 @@ class API_Client {
     private $api_url;
     private $api_key;
 
-
     public function __construct($api_url) {
         $this->api_url = $api_url;
-        $this->api_key = $this->get_api_key();
-    }
-
-    public function get_api_key() {
-        // Check if the API key is defined in wp-config.php
-        if (defined('KC_API_KEY_TOKEN')) {
-            return KC_API_KEY_TOKEN;
-        }
-
-        // Retrieve API key from the database
-        return get_option('kc_api_key', '');
+        $this->api_key = API_Key_Manager::get_api_key();
     }
 
     public function fetch_data($endpoint) {

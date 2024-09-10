@@ -20,6 +20,7 @@ jQuery(document).ready(function ($) {
 		"#carbon_fields_container_hero_image1",
 		"#carbon_fields_container_image1",
 		"#carbon_fields_container_image2",
+		".container-carbon_fields_container_image1",
 	];
 
 	// Loop through each container and apply the update

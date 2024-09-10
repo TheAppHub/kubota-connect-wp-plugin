@@ -14,7 +14,7 @@ class Kubota_Connect_Admin {
         $this->version = $version;
         
         $api_client = new API_Client('https://api.kubota.io/dealers/v1');
-        $this->api_key = $api_client->get_api_key();
+        $this->api_key = API_Key_Manager::get_api_key();
 
         $this->product = new Product($api_client, 'product');
         $this->category = new Kubota_Connect_Category($api_client, 'product_category');

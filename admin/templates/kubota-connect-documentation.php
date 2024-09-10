@@ -16,7 +16,8 @@
 </ul>
 <h3 class="text-lg font-semibold mb-2">Category Shortcodes</h3>
 <ul class="list-disc list-inside mb-4">
-    <li class="text-gray-600"><code>[kubota-connect-category-description]</code> - Displays the Kubota category description.</li>
+    <li class="text-gray-600"><code>[kubota-connect-image]</code> - Displays the Kubota category image if available.</li>
+    <li class="text-gray-600"><code>[kubota-connect-category-description]</code> - Displays the Kubota category description if available.</li>
 </ul>
 <h3 class="text-lg font-semibold mt-4 mb-2">Highlight Shortcodes</h3>
 <ul class="list-disc list-inside">

@@ -8,7 +8,7 @@
  * @since      1.0.0
  * 
  */
-class Kubota_Connect_Password_Manager {
+class Kubota_Connect_Data_Encryption {
 
     /**
      * The encryption key

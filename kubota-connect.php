@@ -88,6 +88,7 @@ function run_kubota_connect() {
 	require_once plugin_dir_path( __FILE__ ) . 'helpers/class-kubota-connect-base-importer.php';
 	require_once plugin_dir_path( __FILE__ ) . 'helpers/class-image-handler.php';
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect.php';
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-key-manager.php';
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-api-client.php';
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-password-manager.php';
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kubota-connect-categories.php';

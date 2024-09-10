@@ -128,7 +128,7 @@
 <h4 class="text-lg mb-4">Schedule Sync</h4>
 
     <p class="text-sm text-gray-600">You can set regularly timed intervals at which data is fetched from the Kubota Connect API to ensure consistency and up-to-date information. This process can be configured to run at various frequencies depending the nature of the data being synchronized. Automated cron jobs are used to manage these sync operations, ensuring seamless and continuous data integration between your website and the Kubota information.</p>
-    <p class="text-sm text-gray-600 mt-3">Please note that importing data from an external API is <strong>resource-intensive</strong> and should be performed only as often as relly necessary to maintain the website's smooth operation and optimal performance. Scheduled synchronisations run at 2am server time (please ensure that your server is configured to your local time zone).</p>
+    <p class="text-sm text-gray-600 mt-3">Please note that importing data from an external API is <strong>resource-intensive</strong> and should be performed only as often as really necessary to maintain the website's smooth operation and optimal performance. Scheduled synchronisations run at 2am server time (please ensure that your server is configured to your local time zone).</p>
 
     <table class="form-table">
         
