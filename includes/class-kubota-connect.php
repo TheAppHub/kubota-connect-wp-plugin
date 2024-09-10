@@ -1,9 +1,13 @@
 <?php
 class Kubota_Connect {
-    private $plugin_name = 'kubota-connect';
-    private $version = '1.0.0';
+    private $plugin_name;
+    private $version;
 
     public function __construct() {
+        $config = include plugin_dir_path(dirname(__FILE__)) . 'config.php';
+        $this->plugin_name = $config['plugin_name'];
+        $this->version = $config['version'];
+
         add_action('wp_enqueue_scripts', [$this, 'enqueue_public_styles']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_public_scriptes']);
 

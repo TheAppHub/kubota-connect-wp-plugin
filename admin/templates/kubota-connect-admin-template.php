@@ -8,12 +8,13 @@
         <img src="<?php echo plugin_dir_url(dirname(__FILE__)) . 'img/kubota-connect-logo.png' ?>" class="mr-5 h-6" alt="Kubota Connect Logo" />
     </div>
     <div class="bg-white shadow rounded-lg p-4">
-        <div class="mb-4 border-b border-gray-200">
+        <div class="mb-4 border-b border-gray-200 flex justify-between items-center">
             <nav class="flex">
-                <button id="settings-tab" class="text-gray-600 py-2 px-4 block focus:outline-none hover:bg-gray-100 active:bg-gray-200">Settings</button>
-                <button id="api-key-tab" class="text-gray-600 py-2 px-4 block focus:outline-none hover:bg-gray-100 active:bg-gray-200">API Key</button>
-                <button id="documentation-tab" class="text-gray-600 py-2 px-4 block focus:outline-none hover:bg-gray-100 active:bg-gray-200">Documentation</button>
+            <button id="settings-tab" class="text-gray-600 py-2 px-4 block focus:outline-none hover:bg-gray-100 active:bg-gray-200">Settings</button>
+            <button id="api-key-tab" class="text-gray-600 py-2 px-4 block focus:outline-none hover:bg-gray-100 active:bg-gray-200">API Key</button>
+            <button id="documentation-tab" class="text-gray-600 py-2 px-4 block focus:outline-none hover:bg-gray-100 active:bg-gray-200">Documentation</button>
             </nav>
+            <div class="text-gray-600"><?php echo $this->version ?></div>
         </div>
         <div class="w-full max-w-5xl">
             <div id="settings-content" class="tab-content">
