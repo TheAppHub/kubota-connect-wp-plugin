@@ -163,7 +163,7 @@ class Kubota_Connect_Admin {
         if (defined('KC_API_KEY_TOKEN')) {
             echo '<p style="color: green;">API Key is set in wp-config.php.</p>';
         } else {
-            $api_key = get_option('kc_api_key');
+            $api_key = API_Key_Manager::get_api_key();
             echo '<input type="password" name="kc_api_key" value="' . esc_attr($api_key) . '" placeholder="Enter your API Key">';
             if ($api_key) {
                 echo '<p style="color: green;">API Key is set.</p>';

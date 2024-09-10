@@ -4,7 +4,6 @@
     <div class="notice notice-error"><p><?php echo esc_html($api_key_error); ?></p></div>
 <?php endif; ?>
 
-
     <h2 class="text-xl font-bold text-gray-800 mb-4">Important: Secure Storage of API Keys</h2>
     
     <p class="text-gray-600 mb-2">
