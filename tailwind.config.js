@@ -34,7 +34,9 @@ module.exports = withMT({
 			},
 		},
 	},
-	plugins: [],
+	corePlugins: {
+		fixed: false, // Disable the 'fixed' class
+	},
 });
 
 // Run this command to generate the css file for admin area
