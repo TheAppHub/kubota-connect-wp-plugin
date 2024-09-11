@@ -4,16 +4,21 @@ use Carbon_Fields\Container;
 use Carbon_Fields\Field;
 
 /**
- * Represents a product in the Kubota Connect plugin.
+ * Class Product
  *
- * This class extends the Base_Importer class and provides functionality for importing products.
+ * This class extends the Base_Importer class and is responsible for handling product-related functionalities
+ * within the Kubota Connect plugin.
  *
  * @package Kubota_Connect
- * @subpackage Includes
  */
 class Product extends Base_Importer {
     private $name = 'kubota-product';
 
+    /**
+     * Constructor for the Kubota_Connect_Products class.
+     *
+     * @param object $api_client An instance of the API client used to interact with external services.
+     */
     public function __construct($api_client) {
         parent::__construct($api_client, $this->name, true);
 
@@ -34,6 +39,15 @@ class Product extends Base_Importer {
         add_filter('template_include', [$this, 'load_custom_archive_template']);
     }
 
+    /**
+     * Creates a custom post type for the Kubota Connect plugin.
+     *
+     * This function registers a new custom post type to be used within the
+     * Kubota Connect plugin. It sets up the necessary labels, supports, and
+     * other arguments required for the custom post type.
+     *
+     * @return void
+     */
     public function create_custom_post_type() {
         register_post_type($this->name, [
             'labels'      => ['name' => __('Kubota Products'), 'singular_name' => __('Product')],
@@ -45,6 +59,14 @@ class Product extends Base_Importer {
         ]);
     }
 
+    /**
+     * Registers the product template field.
+     *
+     * This function is responsible for registering a custom field
+     * for the product template within the Kubota Connect plugin.
+     *
+     * @return void
+     */
     public function register_product_template_field() {
         Container::make('post_meta', 'Template Selection')
             ->set_context( 'side' )
@@ -59,6 +81,15 @@ class Product extends Base_Importer {
             ]);
     }
     
+    /**
+     * Loads a custom template for single product pages.
+     *
+     * This function checks if a custom template for single product pages
+     * should be used and returns the appropriate template file path.
+     *
+     * @param string $template The path to the current template file.
+     * @return string The path to the custom template file if applicable, otherwise the original template path.
+     */
     public function load_custom_single_template($template) {
         if (is_singular($this->name)) {
             $product_template = carbon_get_the_post_meta('product_template');
@@ -74,11 +105,30 @@ class Product extends Base_Importer {
         return $template;
     }
 
+    /**
+     * Registers a custom archive template.
+     *
+     * This function hooks into the template selection process and allows for the 
+     * registration of a custom archive template for the plugin.
+     *
+     * @param array $templates An array of existing templates.
+     * @return array Modified array of templates including the custom archive template.
+     */
     public function register_custom_archive_template($templates) {
         $templates['archive-product-template.php'] = 'Kubota Product Archive Template';
         return $templates;
     }
 
+    /**
+     * Loads a custom archive template for the plugin.
+     *
+     * This function is responsible for loading a custom archive template
+     * when certain conditions are met. It overrides the default template
+     * with a custom one provided by the plugin.
+     *
+     * @param string $template The path to the current template.
+     * @return string The path to the custom archive template if conditions are met, otherwise the original template.
+     */
     public function load_custom_archive_template($template){
         if (get_page_template_slug() == 'archive-product-template.php') {
             $template = plugin_dir_path(__FILE__) . '../public/archive-product-template.php';
@@ -86,6 +136,15 @@ class Product extends Base_Importer {
         return $template;
     }
 
+    /**
+     * Registers custom product fields for the Kubota Connect plugin.
+     *
+     * This method is responsible for adding custom fields to the product
+     * registration process within the Kubota Connect plugin. These fields
+     * can be used to store additional information about products.
+     *
+     * @return void
+     */
     public function register_product_fields() {
         Container::make('post_meta', 'Product Details')
             ->where('post_type', '=', $this->name)
@@ -113,6 +172,15 @@ class Product extends Base_Importer {
         $hero_image_handler->create_hero_image_field($this->name);
     }
 
+    /**
+     * Registers the custom fields for the Kubota Connect product models.
+     *
+     * This function is responsible for defining and registering the custom fields
+     * associated with the product models in the Kubota Connect plugin. These fields
+     * are used to store additional metadata for the product models.
+     *
+     * @return void
+     */
     public function register_model_fields() {
         Container::make('post_meta', 'Model Details')
             ->where('post_type', '=', $this->name)
@@ -134,6 +202,16 @@ class Product extends Base_Importer {
             ]);
     }
 
+    /**
+     * Registers the shortcodes used by the Kubota Connect plugin.
+     *
+     * This method is responsible for defining and registering the shortcodes
+     * that will be available for use within the WordPress site. Shortcodes
+     * allow users to easily embed custom content and functionality within
+     * their posts and pages.
+     *
+     * @return void
+     */
     public function register_shortcodes() {
         add_shortcode('kubota-connect-product-description', [$this, 'shortcode_product_description']);
         add_shortcode('kubota-connect-product-features', [$this, 'shortcode_product_features']);
@@ -143,6 +221,15 @@ class Product extends Base_Importer {
         add_shortcode('kubota-connect-product-specs-table', [$this, 'shortcode_product_models_table']);
     }
 
+    /**
+     * Imports product data into the system.
+     *
+     * This function handles the import of product data from an external source
+     * and processes it to be stored within the system. It ensures that the data
+     * is correctly formatted and saved.
+     *
+     * @return void
+     */
     public function import() {
         // Import categories first using the Kubota_Connect_Category class
         $category_importer = new Kubota_Connect_Category($this->api_client, 'product_category');
@@ -152,10 +239,26 @@ class Product extends Base_Importer {
         parent::import();
     }
 
+    /**
+     * Retrieves the endpoint URL for the Kubota Connect Products.
+     *
+     * This method is responsible for returning the specific endpoint URL
+     * used to interact with the Kubota Connect Products API.
+     *
+     * @return string The endpoint URL.
+     */
     protected function get_endpoint() {
         return '/products'; // Endpoint for products API
     }
 
+    /**
+     * Retrieves the parameters required for the endpoint.
+     *
+     * This method fetches and returns the necessary parameters that are used
+     * to interact with the specified endpoint in the Kubota Connect plugin.
+     *
+     * @return array An associative array of endpoint parameters.
+     */
     protected function get_endpoint_parameters() {
         return [
             ['category' => 'agriculture'],
@@ -164,6 +267,15 @@ class Product extends Base_Importer {
     }
 
 
+    /**
+     * Save post meta data for a given post.
+     *
+     * This method is responsible for saving meta information for a specific post.
+     *
+     * @param int $post_id The ID of the post for which meta data is being saved.
+     * @param mixed $item The meta data to be saved for the post.
+     * @return void
+     */
     protected function save_post_meta($post_id, $item) {
         parent::save_post_meta($post_id, $item);
 
@@ -242,6 +354,12 @@ class Product extends Base_Importer {
         $image_handler->save_image_urls_to_post($post_id, $image_urls, 'image');
     }
 
+    /**
+     * Filters the provided categories to include only the allowed categories.
+     *
+     * @param array $categories An array of categories to be filtered.
+     * @return array The filtered array containing only the allowed categories.
+     */
     private function filter_allowed_categories($categories) {
         $allowed_categories = ['agriculture', 'construction'];
         $filtered_categories = [];
@@ -255,6 +373,13 @@ class Product extends Base_Importer {
         return $filtered_categories;
     }
 
+    /**
+     * Checks if a given category is allowed based on a list of allowed categories.
+     *
+     * @param string $category The category to check.
+     * @param array $allowed_categories An array of allowed categories.
+     * @return bool True if the category is allowed, false otherwise.
+     */
     private function is_subcategory_allowed($category, $allowed_categories) {
         if (in_array($category['id'], $allowed_categories)) {
             return true;
@@ -271,6 +396,15 @@ class Product extends Base_Importer {
         return false;
     }
 
+    /**
+     * Retrieve category IDs.
+     *
+     * This function retrieves the IDs of categories, optionally filtered by a parent category ID.
+     *
+     * @param array $categories An array of categories to search through.
+     * @param int $parent_id Optional. The parent category ID to filter by. Default is 0.
+     * @return array An array of category IDs.
+     */
     function get_category_ids($categories, $parent_id = 0) {
         $category_ids = [];
     
@@ -298,12 +432,27 @@ class Product extends Base_Importer {
         return $category_ids;
     }
 
+    /**
+     * Shortcode handler for displaying product descriptions.
+     *
+     * This function processes the shortcode for product descriptions and returns
+     * the appropriate content based on the provided attributes.
+     *
+     * @param array $atts An associative array of attributes passed to the shortcode.
+     * @return string The content to display for the product description.
+     */
     public function shortcode_product_description($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
         $description = carbon_get_post_meta($post_id, 'product_description');
         return wpautop($description);
     }
 
+    /**
+     * Shortcode handler for displaying product features.
+     *
+     * @param array $atts Shortcode attributes.
+     * @return string HTML content to display product features.
+     */
     public function shortcode_product_features($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
         $features = carbon_get_post_meta($post_id, 'product_features');
@@ -335,6 +484,12 @@ class Product extends Base_Importer {
     }
     
 
+    /**
+     * Shortcode handler for displaying a product brochure.
+     *
+     * @param array $atts Shortcode attributes.
+     * @return string HTML content for the product brochure.
+     */
     public function shortcode_product_brochure($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
         $brochure_url = carbon_get_post_meta($post_id, 'product_brochure');
@@ -350,6 +505,15 @@ class Product extends Base_Importer {
         return '<a href="' . esc_url($brochure_url) . '" class="' . esc_attr($link_classes) . '" target="_blank" rel="noopener">Download Brochure</a>';
     }
     
+    /**
+     * Shortcode handler for displaying product documents.
+     *
+     * This function processes the shortcode [product_documents] and outputs
+     * the relevant product documents based on the provided attributes.
+     *
+     * @param array $atts Shortcode attributes.
+     * @return string HTML content to display the product documents.
+     */
     public function shortcode_product_documents($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
         $documents = carbon_get_post_meta($post_id, 'additional_documents');
@@ -407,6 +571,12 @@ class Product extends Base_Importer {
     }
     
     
+    /**
+     * Shortcode handler for displaying product model names.
+     *
+     * @param array $atts Shortcode attributes.
+     * @return string HTML content to display product model names.
+     */
     public function shortcode_product_model_names($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
         $models = carbon_get_post_meta($post_id, 'product_models');
@@ -434,6 +604,14 @@ class Product extends Base_Importer {
     
     
 
+    /**
+     * Generates a table of product models based on the provided attributes.
+     *
+     * This function is used as a shortcode to display a table of product models.
+     *
+     * @param array $atts An associative array of attributes passed to the shortcode.
+     * @return string The HTML content for the product models table.
+     */
     public function shortcode_product_models_table($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
         $models = carbon_get_post_meta($post_id, 'product_models');

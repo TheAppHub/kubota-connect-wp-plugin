@@ -1,13 +1,34 @@
 <?php
+/**
+ * Class API_Client
+ *
+ * This class handles the interactions with the Kubota Connect API.
+ * It provides methods to send requests and process responses from the API.
+ *
+ * @package Kubota_Connect
+ */
 class API_Client {
     private $api_url;
     private $api_key;
 
+    /**
+     * Constructor for the Kubota_Connect_API_Client class.
+     *
+     * Initializes the API client with the provided API URL.
+     *
+     * @param string $api_url The base URL for the API.
+     */
     public function __construct($api_url) {
         $this->api_url = $api_url;
         $this->api_key = API_Key_Manager::get_api_key();
     }
 
+    /**
+     * Fetches data from the specified API endpoint.
+     *
+     * @param string $endpoint The API endpoint to fetch data from.
+     * @return mixed The data retrieved from the API endpoint.
+     */
     public function fetch_data($endpoint) {
         if (empty($this->api_key || $this->api_key === '')) {
             return new WP_Error('missing_api_key', 'API key is missing.');
