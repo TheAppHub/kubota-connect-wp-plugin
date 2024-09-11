@@ -1,15 +1,40 @@
 <?php
+/**
+ * Class Base_Importer
+ *
+ * This class serves as the base importer for the Kubota Connect plugin.
+ * It provides foundational functionality for importing data into the system.
+ *
+ * @package Kubota_Connect
+ * @subpackage Helpers
+ */
 class Base_Importer {
     protected $api_client;
     protected $post_type;
     protected $fetch_details;
 
+    /**
+     * Constructor for the Kubota_Connect_Base_Importer class.
+     *
+     * @param object $api_client   The API client instance used for making requests.
+     * @param string $post_type    The post type that this importer will handle.
+     * @param bool   $fetch_details Optional. Whether to fetch detailed information. Default is false.
+     */
     public function __construct($api_client, $post_type, $fetch_details = false) {
         $this->api_client = $api_client;
         $this->post_type = $post_type;
         $this->fetch_details = $fetch_details;
     }
 
+    /**
+     * Imports data into the system.
+     *
+     * This method handles the import process for the Kubota Connect plugin.
+     * It reads data from a specified source and processes it to be integrated
+     * into the WordPress environment.
+     *
+     * @return void
+     */
     public function import() {
         $all_data = [];
         $parameters = $this->get_endpoint_parameters();
@@ -59,15 +84,35 @@ class Base_Importer {
     }
 
 
+    /**
+     * Fetches the details of an item based on its ID.
+     *
+     * @param int $id The ID of the item to fetch details for.
+     * @return array The details of the item.
+     */
     protected function fetch_item_details($id) {
         $endpoint = $this->get_item_details_endpoint($id);
         return $this->api_client->fetch_data($endpoint);
     }
 
+    /**
+     * Retrieves the endpoint URL for fetching item details.
+     *
+     * @param int $id The unique identifier of the item.
+     * @return string The endpoint URL for the specified item.
+     */
     protected function get_item_details_endpoint($id) {
         return $this->get_endpoint() . '/' . $id;
     }
 
+    /**
+     * Processes a single item.
+     *
+     * This method is responsible for handling the processing logic of an individual item.
+     *
+     * @param mixed $item The item to be processed.
+     * @return void
+     */
     protected function process_item($item) {
         $existing_post_id = $this->get_existing_post_id($item);
 
@@ -78,6 +123,12 @@ class Base_Importer {
         }
     }
 
+    /**
+     * Retrieves the ID of an existing post based on the provided item.
+     *
+     * @param mixed $item The item used to determine the existing post ID.
+     * @return int|null The ID of the existing post if found, or null if not found.
+     */
     protected function get_existing_post_id($item) {
         $args = [
             'post_type'   => $this->post_type,
@@ -91,6 +142,12 @@ class Base_Importer {
         return $posts ? $posts[0] : null;
     }
 
+    /**
+     * Creates a new post based on the provided item data.
+     *
+     * @param array $item An associative array containing the data for the new post.
+     * @return int|WP_Error The ID of the newly created post on success, or a WP_Error object on failure.
+     */
     protected function create_post($item) {
         // Sometimes the API uses 'title' instead of 'name'
         $post_title = (array_key_exists('name', $item)) ? $item['name'] : $item['title'];
@@ -107,6 +164,16 @@ class Base_Importer {
         }
     }
 
+    /**
+     * Updates an existing post with new data.
+     *
+     * This method takes a post ID and an item containing new data, and updates the post accordingly.
+     *
+     * @param int $post_id The ID of the post to be updated.
+     * @param array $item An associative array containing the new data for the post.
+     * 
+     * @return void
+     */
     protected function update_post($post_id, $item) {
         // Sometimes the API uses 'title' instead of 'name'
         $post_title = (array_key_exists('name', $item)) ? $item['name'] : $item['title'];
@@ -119,12 +186,29 @@ class Base_Importer {
         $this->save_post_meta($post_id, $item);
     }
 
+    /**
+     * Saves metadata for a given post.
+     *
+     * This function updates or adds metadata for a specified post ID using the provided item data.
+     *
+     * @param int $post_id The ID of the post for which metadata is being saved.
+     * @param array $item An associative array containing the metadata to be saved.
+     * @return void
+     */
     protected function save_post_meta($post_id, $item) {
         // Default meta fields; can be overridden in child classes
         update_post_meta($post_id, 'external_id', $item['id']);
         // Add more fields specific to the child class
     }
 
+    /**
+     * Removes deleted items from the provided data.
+     *
+     * This method processes the given data and removes any items that are marked as deleted.
+     *
+     * @param array $data The data array from which deleted items need to be removed.
+     * @return array The filtered data array with deleted items removed.
+     */
     protected function remove_deleted_items($data) {
         $imported_ids = array_column($data, 'id');
 
@@ -145,11 +229,27 @@ class Base_Importer {
         }
     }
 
+    /**
+     * Retrieves the endpoint URL for the importer.
+     *
+     * This method is used to get the specific endpoint URL that the importer will use
+     * to fetch or send data. The endpoint URL is typically defined in the configuration
+     * or settings of the importer.
+     *
+     * @return string The endpoint URL.
+     */
     protected function get_endpoint() {
         // Should be implemented in child classes
         return '';
     }
 
+    /**
+     * Combines the given endpoint with the provided parameters.
+     *
+     * @param string $endpoint The API endpoint to which parameters will be appended.
+     * @param array $param An associative array of parameters to be combined with the endpoint.
+     * @return string The full URL with the endpoint and parameters combined.
+     */
     protected function combine_endpoint_and_parameters($endpoint, $param) {
         if ($param) {
             $endpoint .= '?' . http_build_query($param);
@@ -157,6 +257,14 @@ class Base_Importer {
         return $endpoint;
     }
 
+    /**
+     * Retrieves the endpoint parameters for the importer.
+     *
+     * This method is protected and is used to obtain the necessary parameters
+     * required for connecting to the endpoint.
+     *
+     * @return array An associative array of endpoint parameters.
+     */
     protected function get_endpoint_parameters() {
         // Should be implemented in child classes, return an array of parameters
         return [];
