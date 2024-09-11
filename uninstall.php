@@ -29,3 +29,35 @@
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
+
+// Clear scheduled hooks
+wp_clear_scheduled_hook('kubota-connect_import_products_event');
+wp_clear_scheduled_hook('kubota-connect_import_finance_offers_event');
+wp_clear_scheduled_hook('kubota-connect_import_highlights_event');
+wp_clear_scheduled_hook('kubota-connect_import_categories_event');
+
+// Delete custom post type data
+delete_cpt_data('product');
+delete_cpt_data('finance_offer');
+delete_cpt_data('highlight');
+delete_cpt_data('category');
+
+// Delete plugin options
+delete_option('kc_api_key');
+delete_option('product_schedule');
+delete_option('finance_offer_schedule');
+delete_option('highlight_schedule');
+delete_option('category_schedule');
+
+
+function delete_cpt_data($cpt) {
+	$posts = get_posts(array(
+		'post_type' => $cpt,
+		'numberposts' => -1,
+		'post_status' => 'any'
+	));
+
+	foreach ($posts as $post) {
+		wp_delete_post($post->ID, true);
+	}
+}
