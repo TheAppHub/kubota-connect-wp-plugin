@@ -33,13 +33,13 @@ class Kubota_Connect_Admin {
             'Kubota Connect',
             'manage_options',
             'kubota-connect',
-            [$this, 'settings_page'],
+            [$this, 'importer_page'],
             'dashicons-kubota-connect',
             80
         );
     }
 
-    public function settings_page() {
+    public function importer_page() {
         if (!current_user_can('manage_options')) {
             return;
         }
@@ -96,7 +96,28 @@ class Kubota_Connect_Admin {
             null,
             'import_settings_page'
         );
+    
+        $cpts = [
+            'kubota-product' => 'Products',
+            'kubota-finance_offer' => 'Finance Offers',
+            'kubota-highlight' => 'Highlights',
+        ];
+    
+        foreach ($cpts as $cpt => $label) {
+            add_settings_field(
+                $cpt . '_schedule',
+                $label . ' Import Schedule',
+                [$this, 'schedule_field_callback'],
+                'import_settings_page',
+                'import_schedule_section',
+                ['cpt' => $cpt]
+            );
+    
+            register_setting('import_settings_group', $cpt . '_schedule');
+        }
     }
+
+
 
     public function api_key_field_callback() {
         if (defined('KC_API_KEY_TOKEN')) {

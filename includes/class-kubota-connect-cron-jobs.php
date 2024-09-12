@@ -23,7 +23,6 @@ class Kubota_Connect_Cron {
         if ($this->api_key) {
             add_action('init', [$this, 'schedule_cron_jobs']);
             add_action('kubota-connect_import_products_event', [$this, 'import_products']);
-            add_action('kubota-connect_import_categories_event', [$this, 'import_categories']);
             add_action('kubota-connect_import_finance_offers_event', [$this, 'import_finance_offers']);
             add_action('kubota-connect_import_highlights_event', [$this, 'import_highlights']);
         }
@@ -38,6 +37,7 @@ class Kubota_Connect_Cron {
      * @return void
      */
     public function schedule_cron_jobs() {
+        error_log('Scheduling cron jobs');
         $this->schedule_single_cron_job('kubota-product', 'kubota-connect_import_products_event');
         $this->schedule_single_cron_job('kubota-finance_offer', 'kubota-connect_import_finance_offers_event');
         $this->schedule_single_cron_job('kubota-highlight', 'kubota-connect_import_highlights_event');
@@ -61,26 +61,36 @@ class Kubota_Connect_Cron {
 
         $next_run_time = $this->get_next_run_time($schedule);
         wp_schedule_event($next_run_time, $schedule, $hook);
+        error_log("Scheduled cron job for $hook at $next_run_time");
     }
+
 
     /**
      * Retrieves the next run time for a given schedule.
      *
-     * @param string $schedule The schedule for which to get the next run time.
+     * @param string $schedule The schedule identifier.
      * @return int The timestamp of the next run time.
      */
     private function get_next_run_time($schedule) {
         $current_time = current_time('timestamp');
 
-        if ($schedule === 'monthly') {
-            $next_run_time = strtotime('first day of next month 04:00:00');
-        } elseif ($schedule === 'fortnightly') {
-            $next_run_time = strtotime('first day of next month 04:00:00');
-            if ($current_time > $next_run_time) {
-                $next_run_time = strtotime('+14 days', $next_run_time);
-            }
-        } else {
-            $next_run_time = strtotime('04:00:00 tomorrow');
+        switch ($schedule) {
+            case 'monthly':
+                $next_run_time = strtotime('first day of next month 04:00:00');
+                break;
+            case 'fortnightly':
+                $next_run_time = strtotime('first day of next month 04:00:00');
+                if ($current_time > $next_run_time) {
+                    $next_run_time = strtotime('+14 days', $next_run_time);
+                }
+                break;
+            case 'weekly':
+                $next_run_time = strtotime('next Monday 04:00:00');
+                break;
+            case 'daily':
+            default:
+                $next_run_time = strtotime('04:00:00 tomorrow');
+                break;
         }
 
         return $next_run_time;
@@ -96,6 +106,7 @@ class Kubota_Connect_Cron {
      * @return void
      */
     public function import_products() {
+        error_log('Importing products');
         $product = new Product(new API_Client($this->api_url));
         $product->import();
     }
@@ -109,6 +120,7 @@ class Kubota_Connect_Cron {
      * @return void
      */
     public function import_finance_offers() {
+        error_log('Importing finance offers');
         $finance_offer = new Finance_Offer(new API_Client($this->api_url));
         $finance_offer->import();
     }
@@ -122,6 +134,7 @@ class Kubota_Connect_Cron {
      * @return void
      */
     public function import_highlights() {
+        error_log('Importing highlights');
         $highlight = new Highlight(new API_Client($this->api_url));
         $highlight->import();
     }

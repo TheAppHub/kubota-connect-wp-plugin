@@ -55,71 +55,6 @@
 </script>
 
 
-
-<!-- <form method="post" action="" class="mb-8">
-    <button type="submit" name="import_products" class="button-primary mb-2 relative w-40" <?php disabled(!$this->api_key); ?>>
-        <span class="button-text">Import Products</span>
-        <div class="loading-spinner hidden absolute inset-0 flex items-center justify-center">
-            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <span class="ml-2">
-                Importing...
-            </span>   
-        </div>
-    </button>
-    <button type="submit" name="import_finance_offers" class="button-primary mb-2 relative w-40" <?php disabled(!$this->api_key); ?>>
-        <span class="button-text">Import Finance Offers</span>
-        <div class="loading-spinner hidden absolute inset-0 flex items-center justify-center">
-            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <span class="ml-2">
-                Importing...
-            </span>   
-        </div>
-    </button>
-    <button type="submit" name="import_highlights" class="button-primary mb-2 relative w-40" <?php disabled(!$this->api_key); ?>>
-        <span class="button-text">Import Highlights</span>
-        <div class="loading-spinner hidden absolute inset-0 flex items-center justify-center">
-            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <span class="ml-2">
-                Importing...
-            </span>   
-        </div>
-    </button>
-
-    <button type="submit" name="import_highlights" class="button-primary mb-2 relative w-40" <?php disabled(!$this->api_key); ?>>
-    <span class="button-text hidden">Import Highlights</span>
-    <div class="loading-spinner absolute inset-0 flex items-center justify-center">
-        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        <span class="ml-2">
-            Importing...
-        </span>   
-    </div>
-</button>
-
-</form>
-
-<script>
-    document.querySelectorAll('form button[type="submit"]').forEach(button => {
-        button.addEventListener('click', function() {
-            const spinner = this.querySelector('.loading-spinner');
-            const buttonText = this.querySelector('.button-text');
-            spinner.classList.remove('hidden');
-            buttonText.classList.add('hidden');
-        });
-    });
-</script> -->
-
 <form method="post" action="options.php" class="mb-8">
     <?php
     settings_fields('import_settings_group'); // Keep this to handle the nonce and option group
@@ -134,10 +69,10 @@
         
         <!-- Products Section -->
         <tr>
-            <th scope="row"><label for="product_schedule">Products</label></th>
+            <th scope="row"><label for="kubota-product_schedule">Products</label></th>
             <td>
                 <div>
-                    <select name="product_schedule" id="product_schedule">
+                    <select name="kubota-product_schedule" id="product_schedule">
                         <option value="weekly" <?php selected(get_option('kubota-product_schedule'), 'weekly'); ?>>Weekly</option>
                         <option value="fortnightly" <?php selected(get_option('kubota-product_schedule'), 'fortnightly'); ?>>Fortnightly</option>
                         <option value="monthly" <?php selected(get_option('kubota-product_schedule'), 'monthly'); ?>>Monthly</option>
@@ -153,10 +88,10 @@
 
         <!-- Finance Offers Section -->
         <tr>
-            <th scope="row"><label for="finance_offer_schedule">Finance Offers</label></th>
+            <th scope="row"><label for="kubota-finance_offer_schedule">Finance Offers</label></th>
             <td>
                 <div>
-                    <select name="finance_offer_schedule" id="finance_offer_schedule">
+                    <select name="kubota-finance_offer_schedule" id="finance_offer_schedule">
                         <option value="weekly" <?php selected(get_option('kubota-finance_offer_schedule'), 'weekly'); ?>>Weekly</option>
                         <option value="fortnightly" <?php selected(get_option('kubota-finance_offer_schedule'), 'fortnightly'); ?>>Fortnightly</option>
                         <option value="monthly" <?php selected(get_option('kubota-finance_offer_schedule'), 'monthly'); ?>>Monthly</option>
@@ -173,10 +108,10 @@
 
         <!-- Highlights Section -->
         <tr>
-            <th scope="row"><label for="highlight_schedule">Highlights</label></th>
+            <th scope="row"><label for="kubota-highlight_schedule">Highlights</label></th>
             <td>
                 <div>
-                    <select name="highlight_schedule" id="highlight_schedule">
+                    <select name="kubota-highlight_schedule" id="highlight_schedule">
                         <option value="daily" <?php selected(get_option('kubota-highlight_schedule'), 'daily'); ?>>Daily</option>
                         <option value="weekly" <?php selected(get_option('kubota-highlight_schedule'), 'weekly'); ?>>Weekly</option>
                         <option value="fortnightly" <?php selected(get_option('kubota-highlight_schedule'), 'fortnightly'); ?>>Fortnightly</option>
