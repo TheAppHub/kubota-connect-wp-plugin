@@ -45,8 +45,8 @@ class Kubota_Connect_Admin {
         }
     
         if (isset($_POST['import_categories'])) {
-            $this->category->import();
-            echo '<div class="updated"><p>Categories imported successfully!</p></div>';
+            $updated = $this->category->import();
+            if($updated) echo '<div class="updated"><p>Categories imported successfully!</p></div>';
         }
     
         if (isset($_POST['import_products'])) {
@@ -55,13 +55,13 @@ class Kubota_Connect_Admin {
         }
     
         if (isset($_POST['import_finance_offers'])) {
-            $this->finance_offer->import();
-            echo '<div class="updated"><p>Finance offers imported successfully!</p></div>';
+            $updated = $this->finance_offer->import();
+            if($updated) echo '<div class="updated"><p>Finance offers imported successfully!</p></div>';
         }
     
         if (isset($_POST['import_highlights'])) {
-            $this->highlight->import();
-            echo '<div class="updated"><p>Highlights imported successfully!</p></div>';
+            $updated = $this->highlight->import();
+            if($updated === true) echo '<div class="updated"><p>Highlights imported successfully!</p></div>';
         }
     
         $api_key_error = !$this->api_key ? 'Please enter an API key to enable imports.' : '';

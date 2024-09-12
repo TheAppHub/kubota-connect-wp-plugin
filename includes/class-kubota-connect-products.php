@@ -233,7 +233,11 @@ class Product extends Base_Importer {
     public function import() {
         // Import categories first using the Kubota_Connect_Category class
         $category_importer = new Kubota_Connect_Category($this->api_client, 'product_category');
-        $category_importer->import();
+        $categories = $category_importer->import();
+
+        if (is_wp_error($categories)) {
+            return $categories;
+        }
 
         // Then import products
         parent::import();

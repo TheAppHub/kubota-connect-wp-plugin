@@ -88,8 +88,9 @@ class Kubota_Connect_Category extends Base_Importer {
     public function import() {
         $response = $this->api_client->fetch_data($this->get_endpoint());  // Replace with your actual API endpoint
 
-        if (isset($response['error'])) {
-            return $response['error']; // Return the error message to be displayed
+        if (is_wp_error($response)) {
+            echo '<div class="notice notice-error"><p><strong>Error:</strong> ' . esc_html($response->get_error_message()) . '</p></div>';
+            return;
         }
 
         if (!empty($response)) {
@@ -99,7 +100,7 @@ class Kubota_Connect_Category extends Base_Importer {
                 if (is_wp_error($item)) {
                     // Handle and display API error message for individual item
                     echo '<div class="notice notice-error"><p><strong>Error:</strong> ' . esc_html($item->get_error_message()) . '</p></div>';
-                    continue;
+                    return false;
                 }
                 
                 $this->import_single_category($item);

@@ -47,6 +47,7 @@ class Base_Importer {
             if (is_wp_error($data)) {
                 // Handle and display API error message
                 echo '<div class="notice notice-error"><p><strong>Error:</strong> ' . esc_html($data->get_error_message()) . '</p></div>';
+                return false;
             } else {
                 $all_data = array_merge($all_data, $data);
             }
@@ -59,7 +60,8 @@ class Base_Importer {
                 if (is_wp_error($data)) {
                     // Handle and display API error message
                     echo '<div class="notice notice-error"><p><strong>Error:</strong> ' . esc_html($data->get_error_message()) . '</p></div>';
-                    continue;
+                    return false;
+                    // continue;
                 }
 
                 $all_data = array_merge($all_data, $data);
@@ -72,7 +74,8 @@ class Base_Importer {
                 if (is_wp_error($item)) {
                     // Handle and display API error message for individual item
                     echo '<div class="notice notice-error"><p><strong>Error:</strong> ' . esc_html($item->get_error_message()) . '</p></div>';
-                    continue;
+                    return false;
+                    // continue;
                 }
             }
             $this->process_item($item);
