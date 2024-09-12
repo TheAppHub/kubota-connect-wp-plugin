@@ -53,6 +53,7 @@ class Kubota_Connect_Cron {
      */
     private function schedule_single_cron_job($cpt, $hook) {
         $schedule = get_option($cpt . '_schedule', 'daily');
+        error_log("Scheduling cron job for $hook with schedule $schedule");
 
         $timestamp = wp_next_scheduled($hook);
         if ($timestamp) {
