@@ -46,7 +46,7 @@ class Highlight extends Base_Importer {
             'public'      => true,
             'has_archive' => true,
             'rewrite'     => ['slug' => 'kubota-highlights'],
-            'supports'    => ['title'],
+            'supports'    => ['title', 'editor'],
             'menu_icon'   => 'dashicons-star-filled',
         ]);
     }
