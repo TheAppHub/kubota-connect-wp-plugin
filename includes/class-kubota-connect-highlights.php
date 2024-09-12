@@ -184,44 +184,51 @@ class Highlight extends Base_Importer {
      * @return string HTML output of the highlight slider.
      */
     public function shortcode_highlight_slider($atts) {
-            // Register Swiper
-            wp_register_style('SwiperCSS', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css');
-            wp_register_script('SwiperJS', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', [], false, true);
-            // Enqueue Swiper
-            wp_enqueue_style('SwiperCSS');
-            wp_enqueue_script('SwiperJS');
-    
-            $query = new WP_Query([
-                'post_type'      => $this->name,
-                'posts_per_page' => -1,
-            ]);
-    
-            ob_start();
-            include plugin_dir_path(__FILE__) . '../public/templates/highlight-slider-template.php';
-            $output = ob_get_clean();
-    
-            $script = '
-                var swiper = new Swiper(".kubota-highlight-slider", {
-                    slidesPerView: 1,
-                    loop: true,
-                    speed: 600,
-                    effect: "fade",
-                    autoplay: {
-                        delay: 5000,
-                    },
-                    pagination: {
-                        el: ".swiper-pagination",
-                        clickable: true,
-                    },
-                    navigation: {
-                        nextEl: ".swiper-button-next",
-                        prevEl: ".swiper-button-prev",
-                    },
-                });
-            ';
 
-            wp_add_inline_script('SwiperJS', $script,'after');
-    
-            return $output;
+        /**
+         * Checks if Elementor is loaded or if the 'swiper' or 'swiper-js' scripts are not enqueued.
+         * If Elementor is loaded, the scripts will not be added.
+         */
+        if ( did_action( 'elementor/loaded' ) || ( !wp_script_is( 'swiper', 'enqueued' ) && !wp_script_is( 'swiper-js', 'enqueued' ) ) ) {
+            // Register Swiper
+            wp_register_style('swiper', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css');
+            wp_register_script('swiper', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', [], false, true);
+            // Enqueue Swiper
+            wp_enqueue_style('swiper');
+            wp_enqueue_script('swiper');
         }
+
+        $query = new WP_Query([
+            'post_type'      => $this->name,
+            'posts_per_page' => -1,
+        ]);
+
+        ob_start();
+        include plugin_dir_path(__FILE__) . '../public/templates/highlight-slider-template.php';
+        $output = ob_get_clean();
+
+        $script = '
+            var swiper = new Swiper(".kubota-highlight-slider", {
+                slidesPerView: 1,
+                loop: true,
+                speed: 600,
+                effect: "fade",
+                autoplay: {
+                    delay: 5000,
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+            });
+        ';
+
+        wp_add_inline_script('swiper', $script,'after');
+
+        return $output;
+    }
 } 
