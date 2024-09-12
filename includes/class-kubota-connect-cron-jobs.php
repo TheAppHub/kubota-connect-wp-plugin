@@ -9,6 +9,7 @@
  */
 class Kubota_Connect_Cron {
     private $api_key;
+    private $api_url;
 
     /**
      * Constructor for the Kubota_Connect_Cron_Jobs class.
@@ -17,6 +18,7 @@ class Kubota_Connect_Cron {
      */
     public function __construct() {
         $this->api_key = API_Key_Manager::get_api_key();
+        $this->api_url = Kubota_Connect_Config::getConfig('api_url');
 
         if ($this->api_key) {
             add_action('init', [$this, 'schedule_cron_jobs']);
@@ -37,7 +39,7 @@ class Kubota_Connect_Cron {
      */
     public function schedule_cron_jobs() {
         $this->schedule_single_cron_job('kubota-product', 'kubota-connect_import_products_event');
-        $this->schedule_single_cron_job('kubota-finance', 'kubota-connect_import_finance_offers_event');
+        $this->schedule_single_cron_job('kubota-finance_offer', 'kubota-connect_import_finance_offers_event');
         $this->schedule_single_cron_job('kubota-highlight', 'kubota-connect_import_highlights_event');
     }
 
@@ -94,7 +96,7 @@ class Kubota_Connect_Cron {
      * @return void
      */
     public function import_products() {
-        $product = new Product(new API_Client('https://api.kubota.io/dealers/v1'));
+        $product = new Product(new API_Client($this->api_url));
         $product->import();
     }
 
@@ -107,7 +109,7 @@ class Kubota_Connect_Cron {
      * @return void
      */
     public function import_finance_offers() {
-        $finance_offer = new Finance_Offer(new API_Client('https://api.kubota.io/dealers/v1'));
+        $finance_offer = new Finance_Offer(new API_Client($this->api_url));
         $finance_offer->import();
     }
 
@@ -120,7 +122,7 @@ class Kubota_Connect_Cron {
      * @return void
      */
     public function import_highlights() {
-        $highlight = new Highlight(new API_Client('https://api.kubota.io/dealers/v1'));
+        $highlight = new Highlight(new API_Client($this->api_url));
         $highlight->import();
     }
 }

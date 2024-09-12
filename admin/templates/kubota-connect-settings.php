@@ -138,9 +138,9 @@
             <td>
                 <div>
                     <select name="product_schedule" id="product_schedule">
-                        <option value="weekly" <?php selected(get_option('product_schedule'), 'weekly'); ?>>Weekly</option>
-                        <option value="fortnightly" <?php selected(get_option('product_schedule'), 'fortnightly'); ?>>Fortnightly</option>
-                        <option value="monthly" <?php selected(get_option('product_schedule'), 'monthly'); ?>>Monthly</option>
+                        <option value="weekly" <?php selected(get_option('kubota-product_schedule'), 'weekly'); ?>>Weekly</option>
+                        <option value="fortnightly" <?php selected(get_option('kubota-product_schedule'), 'fortnightly'); ?>>Fortnightly</option>
+                        <option value="monthly" <?php selected(get_option('kubota-product_schedule'), 'monthly'); ?>>Monthly</option>
                     </select>
                 </div>
                 <div class="mt-4 mb-4">
@@ -157,9 +157,9 @@
             <td>
                 <div>
                     <select name="finance_offer_schedule" id="finance_offer_schedule">
-                        <option value="weekly" <?php selected(get_option('finance_offer_schedule'), 'weekly'); ?>>Weekly</option>
-                        <option value="fortnightly" <?php selected(get_option('finance_offer_schedule'), 'fortnightly'); ?>>Fortnightly</option>
-                        <option value="monthly" <?php selected(get_option('finance_offer_schedule'), 'monthly'); ?>>Monthly</option>
+                        <option value="weekly" <?php selected(get_option('kubota-finance_offer_schedule'), 'weekly'); ?>>Weekly</option>
+                        <option value="fortnightly" <?php selected(get_option('kubota-finance_offer_schedule'), 'fortnightly'); ?>>Fortnightly</option>
+                        <option value="monthly" <?php selected(get_option('kubota-finance_offer_schedule'), 'monthly'); ?>>Monthly</option>
                     </select>
                 </div>
 
@@ -177,10 +177,10 @@
             <td>
                 <div>
                     <select name="highlight_schedule" id="highlight_schedule">
-                        <option value="daily" <?php selected(get_option('highlight_schedule'), 'daily'); ?>>Daily</option>
-                        <option value="weekly" <?php selected(get_option('highlight_schedule'), 'weekly'); ?>>Weekly</option>
-                        <option value="fortnightly" <?php selected(get_option('highlight_schedule'), 'fortnightly'); ?>>Fortnightly</option>
-                        <option value="monthly" <?php selected(get_option('highlight_schedule'), 'monthly'); ?>>Monthly</option>
+                        <option value="daily" <?php selected(get_option('kubota-highlight_schedule'), 'daily'); ?>>Daily</option>
+                        <option value="weekly" <?php selected(get_option('kubota-highlight_schedule'), 'weekly'); ?>>Weekly</option>
+                        <option value="fortnightly" <?php selected(get_option('kubota-highlight_schedule'), 'fortnightly'); ?>>Fortnightly</option>
+                        <option value="monthly" <?php selected(get_option('kubota-highlight_schedule'), 'monthly'); ?>>Monthly</option>
                     </select>
                 </div>
 

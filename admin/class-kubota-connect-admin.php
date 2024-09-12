@@ -33,13 +33,13 @@ class Kubota_Connect_Admin {
             'Kubota Connect',
             'manage_options',
             'kubota-connect',
-            [$this, 'importer_page'],
+            [$this, 'settings_page'],
             'dashicons-kubota-connect',
             80
         );
     }
 
-    public function importer_page() {
+    public function settings_page() {
         if (!current_user_can('manage_options')) {
             return;
         }
@@ -87,24 +87,7 @@ class Kubota_Connect_Admin {
         );
     
         register_setting('api_key_settings_group', 'kc_api_key');
-    
-        // Product Template Settings
-        add_settings_section(
-            'product_template_section',
-            'Product Template Settings',
-            null,
-            'product_template_settings_page'
-        );
-    
-        add_settings_field(
-            'use_custom_template',
-            'Use Custom Product Template',
-            [$this, 'template_field_callback'],
-            'product_template_settings_page',
-            'product_template_section'
-        );
-    
-        register_setting('product_template_settings_group', 'use_custom_template');
+
     
         // Import Schedule Settings
         add_settings_section(
@@ -113,52 +96,11 @@ class Kubota_Connect_Admin {
             null,
             'import_settings_page'
         );
-    
-        $cpts = [
-            'product' => 'Products',
-            'finance_offer' => 'Finance Offers',
-            'highlight' => 'Highlights',
-            'category' => 'Categories'
-        ];
-    
-        foreach ($cpts as $cpt => $label) {
-            add_settings_field(
-                $cpt . '_schedule',
-                $label . ' Import Schedule',
-                [$this, 'schedule_field_callback'],
-                'import_settings_page',
-                'import_schedule_section',
-                ['cpt' => $cpt]
-            );
-    
-            register_setting('import_settings_group', $cpt . '_schedule');
-        }
-    }
-
-    public function template_field_callback() {
-        $use_custom_template = get_option('use_custom_template', 'no');
-        ?>
-        <input type="checkbox" name="use_custom_template" value="yes" <?php checked($use_custom_template, 'yes'); ?>>
-        <label for="use_custom_template">Check this box to use the custom template file (single-product-template.php). Uncheck to use the default template.</label>
-        <?php
-    }
-
-    public function schedule_field_callback($args) {
-        $cpt = $args['cpt'];
-        $schedule = get_option($cpt . '_schedule', 'daily');
-        ?>
-        <select name="<?php echo esc_attr($cpt . '_schedule'); ?>">
-            <option value="daily" <?php selected($schedule, 'daily'); ?>>Daily</option>
-            <option value="weekly" <?php selected($schedule, 'weekly'); ?>>Weekly</option>
-            <option value="fortnightly" <?php selected($schedule, 'fortnightly'); ?>>Fortnightly</option>
-            <option value="monthly" <?php selected($schedule, 'monthly'); ?>>Monthly</option>
-        </select>
-        <?php
     }
 
     public function api_key_field_callback() {
         if (defined('KC_API_KEY_TOKEN')) {
-            echo '<p style="color: green;">API Key is set in wp-config.php.</p>';
+            echo '<p style="color: green;">Great, the API Key is set in wp-config.php.</p>';
         } else {
             $api_key = API_Key_Manager::get_api_key();
             echo '<input type="password" name="kc_api_key" value="' . esc_attr($api_key) . '" placeholder="Enter your API Key">';

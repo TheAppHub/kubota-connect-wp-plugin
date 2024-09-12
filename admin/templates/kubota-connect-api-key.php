@@ -19,7 +19,7 @@
     </p>
 
     <div class="mb-8">
-        <code class="text-sm inline-flex text-left items-center space-x-4 bg-gray-800 text-white rounded-lg p-3 pl-5">
+        <code class="text-xs inline-flex text-left items-center space-x-4 bg-gray-800 text-white rounded-lg py-2 px-3">
             <span class="flex gap-4">
                 <span class="flex-1">
                     <span>
@@ -63,7 +63,7 @@
 
     svgElement.addEventListener('click', function() {
         navigator.clipboard.writeText(textToCopy).then(function() {
-            alert('Copied: ' + textToCopy + ' to clipboard.'); // Optional alert or you can add a visual indicator
+            alert('Copied "' + textToCopy + '" to your clipboard. Please paste this now into the wp-config.php file and replace the placeholder with your token.'); // Optional alert or you can add a visual indicator
         }).catch(function(error) {
             console.error('Error copying text: ', error);
         });

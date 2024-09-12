@@ -36,11 +36,15 @@ wp_clear_scheduled_hook('kubota-connect_import_finance_offers_event');
 wp_clear_scheduled_hook('kubota-connect_import_highlights_event');
 wp_clear_scheduled_hook('kubota-connect_import_categories_event');
 
+// Delete custom taxonomy data
+delete_terms('kubota_category');
+
 // Delete custom post type data
-delete_cpt_data('product');
-delete_cpt_data('finance_offer');
-delete_cpt_data('highlight');
-delete_cpt_data('category');
+delete_cpt_data('kubota-product');
+delete_cpt_data('kubotafinance_offer');
+delete_cpt_data('kubota-highlight');
+
+
 
 // Delete plugin options
 delete_option('kc_api_key');
@@ -59,5 +63,17 @@ function delete_cpt_data($cpt) {
 
 	foreach ($posts as $post) {
 		wp_delete_post($post->ID, true);
+	}
+}
+
+function delete_terms($term_name){
+	// Delete terms associated with custom post type
+	$terms = get_terms(array(
+		'taxonomy' => $term_name,
+		'hide_empty' => false,
+	));
+
+	foreach ($terms as $term) {
+		wp_delete_term($term->term_id, $term_name);
 	}
 }
