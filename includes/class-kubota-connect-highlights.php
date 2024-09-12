@@ -44,9 +44,9 @@ class Highlight extends Base_Importer {
         register_post_type($this->name, [
             'labels'      => ['name' => __('Kubota Highlights'), 'singular_name' => __('Highlight')],
             'public'      => true,
-            'has_archive' => true,
+            'has_archive' => false,
             'rewrite'     => ['slug' => 'kubota-highlights'],
-            'supports'    => ['title', 'editor'],
+            'supports'    => ['title'],
             'menu_icon'   => 'dashicons-star-filled',
         ]);
     }
