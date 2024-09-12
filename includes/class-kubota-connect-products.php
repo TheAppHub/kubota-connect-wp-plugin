@@ -240,7 +240,7 @@ class Product extends Base_Importer {
         }
 
         // Then import products
-        parent::import();
+        return parent::import();
     }
 
     /**
