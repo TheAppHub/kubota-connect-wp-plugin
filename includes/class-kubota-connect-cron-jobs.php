@@ -15,8 +15,8 @@ class Kubota_Connect_Cron {
      *
      * @param string $api_key The API key used for authentication.
      */
-    public function __construct($api_key) {
-        $this->api_key = $api_key;
+    public function __construct() {
+        $this->api_key = API_Key_Manager::get_api_key();
 
         if ($this->api_key) {
             add_action('init', [$this, 'schedule_cron_jobs']);

@@ -1,4 +1,7 @@
 <?php
+
+use PSpell\Config;
+
 /**
  * Class API_Client
  *
@@ -18,8 +21,8 @@ class API_Client {
      *
      * @param string $api_url The base URL for the API.
      */
-    public function __construct($api_url) {
-        $this->api_url = $api_url;
+    public function __construct() {
+        $this->api_url = Kubota_Connect_Config::getConfig('api_url');
         $this->api_key = API_Key_Manager::get_api_key();
     }
 

@@ -9,15 +9,17 @@ class Kubota_Connect {
      * Initializes the Kubota_Connect class.
      */
     public function __construct() {
-        $config = include plugin_dir_path(dirname(__FILE__)) . 'config.php';
-        $this->plugin_name = $config['plugin_name'];
-        $this->version = $config['version'];
+        $this->plugin_name = Kubota_Connect_Config::getConfig('plugin_name');
+        $this->version = Kubota_Connect_Config::getConfig('version');
 
         add_action('wp_enqueue_scripts', [$this, 'enqueue_public_styles']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_public_scriptes']);
 
         // Instantiate the admin class
-        new Kubota_Connect_Admin($this->plugin_name, $this->version);
+        new Kubota_Connect_Admin();
+
+        // Initialize the cron jobs
+        new Kubota_Connect_Cron();
     }
 
     /**

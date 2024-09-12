@@ -9,11 +9,11 @@ class Kubota_Connect_Admin {
     private $finance_offer;
     private $highlight;
 
-    public function __construct($plugin_name, $version) {
-        $this->plugin_name = $plugin_name;
-        $this->version = $version;
+    public function __construct() {
+        $this->plugin_name = Kubota_Connect_Config::getConfig('plugin_name');
+        $this->version = Kubota_Connect_Config::getConfig('version');
         
-        $api_client = new API_Client('https://api.kubota.io/dealers/v1');
+        $api_client = new API_Client();
         $this->api_key = API_Key_Manager::get_api_key();
 
         $this->product = new Product($api_client, 'product');
@@ -25,9 +25,6 @@ class Kubota_Connect_Admin {
         add_action('admin_init', [$this, 'register_settings']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_styles']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
-
-        // Initialize the cron jobs
-        new Kubota_Connect_Cron($this->api_key);
     }
 
     public function importer_menu() {
