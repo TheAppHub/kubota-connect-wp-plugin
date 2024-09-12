@@ -37,7 +37,6 @@ class Kubota_Connect_Cron {
      * @return void
      */
     public function schedule_cron_jobs() {
-        error_log('Scheduling cron jobs');
         $this->schedule_single_cron_job('kubota-product', 'kubota-connect_import_products_event');
         $this->schedule_single_cron_job('kubota-finance_offer', 'kubota-connect_import_finance_offers_event');
         $this->schedule_single_cron_job('kubota-highlight', 'kubota-connect_import_highlights_event');
@@ -53,7 +52,6 @@ class Kubota_Connect_Cron {
      */
     private function schedule_single_cron_job($cpt, $hook) {
         $schedule = get_option($cpt . '_schedule', 'daily');
-        error_log("Scheduling cron job for $hook with schedule $schedule");
 
         $timestamp = wp_next_scheduled($hook);
         if ($timestamp) {
@@ -62,7 +60,6 @@ class Kubota_Connect_Cron {
 
         $next_run_time = $this->get_next_run_time($schedule);
         wp_schedule_event($next_run_time, $schedule, $hook);
-        error_log("Scheduled cron job for $hook at $next_run_time");
     }
 
 
@@ -107,7 +104,6 @@ class Kubota_Connect_Cron {
      * @return void
      */
     public function import_products() {
-        error_log('Importing products');
         $product = new Product(new API_Client($this->api_url));
         $product->import();
     }
@@ -121,7 +117,6 @@ class Kubota_Connect_Cron {
      * @return void
      */
     public function import_finance_offers() {
-        error_log('Importing finance offers');
         $finance_offer = new Finance_Offer(new API_Client($this->api_url));
         $finance_offer->import();
     }
@@ -135,7 +130,6 @@ class Kubota_Connect_Cron {
      * @return void
      */
     public function import_highlights() {
-        error_log('Importing highlights');
         $highlight = new Highlight(new API_Client($this->api_url));
         $highlight->import();
     }
