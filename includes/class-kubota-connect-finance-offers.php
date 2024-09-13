@@ -111,7 +111,8 @@ class Finance_Offer extends Base_Importer {
         add_shortcode('kubota-connect-finance-term-in-months', [$this, 'shortcode_finance_term_in_months']);
         add_shortcode('kubota-connect-finance-deposit', [$this, 'shortcode_finance_deposit']);
         add_shortcode('kubota-connect-finance-terms', [$this, 'shortcode_finance_terms']);
-        add_shortcode('kubota-connect-finance-offer', [$this, 'finance_offer_shortcode']);
+        add_shortcode('kubota-connect-finance-offer', [$this, 'shortcode_finance_offer']);
+        add_shortcode('kubota-connect-finance-offer-details', [$this, 'shortcode_finance_offer_details']);
     }
 
     /**
@@ -122,7 +123,16 @@ class Finance_Offer extends Base_Importer {
      */
     public function shortcode_finance_offer_type($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
-        return esc_html(carbon_get_post_meta($post_id, 'finance_type'));
+        $db_type = carbon_get_post_meta($post_id, 'finance_type');
+    
+        // Return the finance offer type based on the database type
+        if($db_type === 'commercial') {
+            return 'Business Finance';
+        }
+    
+        // Return the finance offer type based on the database type
+        return 'Consumer Finance';
+
     }
 
     /**
@@ -133,7 +143,10 @@ class Finance_Offer extends Base_Importer {
      */
     public function shortcode_finance_rate_type($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
-        return esc_html(carbon_get_post_meta($post_id, 'finance_rate_type'));
+        $type = carbon_get_post_meta($post_id, 'finance_rate_type');
+
+        return $type === 'finance' ? 'Finance Rate' : 'Comparison Rate';
+  
     }
 
     /**
@@ -201,7 +214,7 @@ class Finance_Offer extends Base_Importer {
      * @param array $atts Shortcode attributes.
      * @return string HTML content to display the finance offers.
      */
-    public function finance_offer_shortcode($atts) {
+    public function shortcode_finance_offer_details($atts) {
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
 
         $atts = shortcode_atts([
@@ -210,8 +223,8 @@ class Finance_Offer extends Base_Importer {
         ], $atts, 'finance_offer');
 
         $title = get_the_title($post_id);
-        $offer_type = carbon_get_post_meta($post_id, 'finance_type');
-        $rate_type = carbon_get_post_meta($post_id, 'finance_rate_type');
+        $offer_type = $this->shortcode_finance_offer_type(null);
+        $rate_type = $this->shortcode_finance_rate_type(null);
         $rate = carbon_get_post_meta($post_id, 'finance_rate');
         $term = carbon_get_post_meta($post_id, 'finance_term_in_months');
         $deposit = carbon_get_post_meta($post_id, 'finance_deposit');
@@ -233,9 +246,8 @@ class Finance_Offer extends Base_Importer {
 
         $output = "
             <div class='finance-offer'>
-            <h2 class='$class_h2'>" . esc_html($title) . " (" . esc_html($offer_type) . ")</h2>
-            <p class='$class_p'>Rate Type: " . esc_html($rate_type) . "</p>
-            <p class='$class_p'>Rate: " . esc_html($rate) . "%</p>
+            <h2 class='$class_h2'>" . esc_html($title) . " | " . esc_html($offer_type) . "</h2>
+            <p class='$class_p'>Rate: " . esc_html($rate) . "%* " . esc_html($rate_type) . "</p>
             <p class='$class_p'>Term: " . esc_html($term) . " months</p>
             <p class='$class_p'>Deposit: " . esc_html($deposit) . "%</p>
             <p class='$class_p'>Expiry Date: " . esc_html($formatted_date) . "</p>

@@ -28,8 +28,8 @@
 </ul>
 <h3 class="text-lg font-semibold mt-4 mb-2">Finance Offers Shortcodes</h3>
 <ul class="list-disc list-inside ">
-    <li class="text-gray-600"><code>[kubota-connect-finance-offer-type]</code> - Displays the offer type.</li>
-    <li class="text-gray-600"><code>[kubota-connect-finance-rate-type]</code> - Displays the type of finance.</li>
+    <li class="text-gray-600"><code>[kubota-connect-finance-offer-type]</code> - Displays the offer type (Consumer or Business Finance).</li>
+    <li class="text-gray-600"><code>[kubota-connect-finance-rate-type]</code> - Displays the type of finance (comparison or finance rate).</li>
     <li class="text-gray-600"><code>[kubota-connect-finance-rate]</code> - Displays the rate in %.</li>
     <li class="text-gray-600"><code>[kubota-connect-finance-term-in-months]</code> - Displays the finance term in months.</li>
     <li class="text-gray-600"><code>[kubota-connect-finance-deposit]</code> - Displays the finance minimum deposit.</li>
@@ -37,7 +37,7 @@
     <li class="text-gray-600"><code>[kubota-connect-finance-terms]</code> - Displays the finance terms and conditions.</li>
     <li class="text-gray-600"><code>[kubota-connect-image]</code> - Displays the finance image.</li>
     <li class="text-gray-600"><code>[kubota-connect-hero-image]</code> - Displays the finance hero image.</li>
-    <li class="text-gray-600"><code>[kubota-connect-finance-offer]</code> - Displays the finance offer.</li>
+    <li class="text-gray-600"><code>[kubota-connect-finance-offer-details]</code> - Displays the finance offer list of details.</li>
 </ul>
 <h3 class="text-md font-semibold mt-6 mb-2">Usage Example</h3>
 <p class="text-gray-600">To display a table of product models and specifications from a specific post with Material Design styling, you can use the following shortcode:</p>
