@@ -3,7 +3,7 @@
 class Kubota_Connect_Config {
 	private static $config = [
 		'plugin_name' => 'kubota-connect',
-		'version' => '0.9.1',
+		'version' => '0.9.2',
 		'api_url' => 'https://api.kubota.io/dealers/v1',
 	];
 
