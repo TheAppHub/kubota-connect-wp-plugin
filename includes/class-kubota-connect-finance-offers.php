@@ -223,8 +223,8 @@ class Finance_Offer extends Base_Importer {
         ], $atts, 'finance_offer');
 
         $title = get_the_title($post_id);
-        $offer_type = $this->shortcode_finance_offer_type(null);
-        $rate_type = $this->shortcode_finance_rate_type(null);
+        $offer_type = $this->shortcode_finance_offer_type(['post_id' => $post_id]);
+        $rate_type = $this->shortcode_finance_rate_type(['post_id' => $post_id]);
         $rate = carbon_get_post_meta($post_id, 'finance_rate');
         $term = carbon_get_post_meta($post_id, 'finance_term_in_months');
         $deposit = carbon_get_post_meta($post_id, 'finance_deposit');
