@@ -241,7 +241,12 @@ class Finance_Offer extends Base_Importer {
             $class_h2 .= ' text-[#E4551C]';
 
             $class_p = 'mb-4';
+            $class_p .= ' text-base';
             $class_p .= ' text-gray-700';
+
+            $class_psm = 'mb-4';
+            $class_psm .= ' text-sm';
+            $class_psm .= ' text-gray-700';
         }
 
         $output = "
@@ -252,7 +257,7 @@ class Finance_Offer extends Base_Importer {
             <p class='$class_p'>Deposit: " . esc_html($deposit) . "%</p>
             <p class='$class_p'>Expiry Date: " . esc_html($formatted_date) . "</p>
             <h3 class='$class_h2'>Terms & Conditions</h3>
-            <p class='$class_p'>" . esc_html($terms) . "</p>
+            <p class='$class_psm'>" . esc_html($terms) . "</p>
             </div>
         ";
 
