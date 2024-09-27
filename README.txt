@@ -5,8 +5,6 @@ Tags: Kubota, Kubota Connect, Kubota Australia, Kubota New Zealand
 Requires at least: 6.0.0
 Tested up to: 6.4.1
 Stable tag: 6.4.1
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Effortlessly connect your WordPress site to Kubota Connect and retrieve dealer-specific products, finance offers, and promotion slides. Enhance your website's functionality by showcasing the latest Kubota equipment, offers, and promotions tailored specifically to your dealership.
 
