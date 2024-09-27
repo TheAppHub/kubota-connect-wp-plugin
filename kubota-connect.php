@@ -19,8 +19,6 @@
  * Version:           0.9.2
  * Author:            The App Hub
  * Author URI:        https://theapphub.com.au/
- * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       kubota-connect
  * Domain Path:       /languages
  */
