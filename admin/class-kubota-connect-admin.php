@@ -16,10 +16,10 @@ class Kubota_Connect_Admin {
         $api_client = new API_Client();
         $this->api_key = API_Key_Manager::get_api_key();
 
-        $this->product = new Product($api_client, 'product');
-        $this->category = new Kubota_Connect_Category($api_client, 'product_category');
-        $this->finance_offer = new Finance_Offer($api_client, 'finance_offer');
-        $this->highlight = new Highlight($api_client, 'highlights');
+        $this->product = new Product($api_client);
+        $this->category = new Kubota_Connect_Category($api_client);
+        $this->finance_offer = new Finance_Offer($api_client);
+        $this->highlight = new Highlight($api_client);
 
         add_action('admin_menu', [$this, 'importer_menu']);
         add_action('admin_init', [$this, 'register_settings']);
