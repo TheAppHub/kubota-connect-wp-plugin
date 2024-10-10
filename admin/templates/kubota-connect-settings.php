@@ -73,9 +73,8 @@
             <td>
                 <div>
                     <select name="kubota-product_schedule" id="product_schedule">
+                        <option value="daily" <?php selected(get_option('kubota-product_schedule'), 'daily'); ?>>Weekly</option>
                         <option value="weekly" <?php selected(get_option('kubota-product_schedule'), 'weekly'); ?>>Weekly</option>
-                        <option value="fortnightly" <?php selected(get_option('kubota-product_schedule'), 'fortnightly'); ?>>Fortnightly</option>
-                        <option value="monthly" <?php selected(get_option('kubota-product_schedule'), 'monthly'); ?>>Monthly</option>
                     </select>
                 </div>
                 <div class="mt-4 mb-4">
@@ -92,9 +91,8 @@
             <td>
                 <div>
                     <select name="kubota-finance_offer_schedule" id="finance_offer_schedule">
+                        <option value="daily" <?php selected(get_option('kubota-finance_offer_schedule'), 'daily'); ?>>Weekly</option>
                         <option value="weekly" <?php selected(get_option('kubota-finance_offer_schedule'), 'weekly'); ?>>Weekly</option>
-                        <option value="fortnightly" <?php selected(get_option('kubota-finance_offer_schedule'), 'fortnightly'); ?>>Fortnightly</option>
-                        <option value="monthly" <?php selected(get_option('kubota-finance_offer_schedule'), 'monthly'); ?>>Monthly</option>
                     </select>
                 </div>
 
@@ -114,8 +112,6 @@
                     <select name="kubota-highlight_schedule" id="highlight_schedule">
                         <option value="daily" <?php selected(get_option('kubota-highlight_schedule'), 'daily'); ?>>Daily</option>
                         <option value="weekly" <?php selected(get_option('kubota-highlight_schedule'), 'weekly'); ?>>Weekly</option>
-                        <option value="fortnightly" <?php selected(get_option('kubota-highlight_schedule'), 'fortnightly'); ?>>Fortnightly</option>
-                        <option value="monthly" <?php selected(get_option('kubota-highlight_schedule'), 'monthly'); ?>>Monthly</option>
                     </select>
                 </div>
 
