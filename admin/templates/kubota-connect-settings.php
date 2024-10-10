@@ -63,7 +63,7 @@
 <h4 class="text-lg mb-4">Schedule Sync</h4>
 
     <p class="text-sm text-gray-600">You can set regularly timed intervals at which data is fetched from the Kubota Connect API to ensure consistency and up-to-date information. This process can be configured to run at various frequencies depending the nature of the data being synchronized. Automated cron jobs are used to manage these sync operations, ensuring seamless and continuous data integration between your website and the Kubota information.</p>
-    <p class="text-sm text-gray-600 mt-3">Please note that importing data from an external API is <strong>resource-intensive</strong> and should be performed only as often as really necessary to maintain the website's smooth operation and optimal performance. Scheduled synchronisations run at 2am server time (please ensure that your server is configured to your local time zone).</p>
+    <p class="text-sm text-gray-600 mt-3">Please note that importing data from an external API is <strong>resource-intensive</strong> and should be performed only as often as really necessary to maintain the website's smooth operation and optimal performance.</p>
 
     <table class="form-table">
         
@@ -73,14 +73,14 @@
             <td>
                 <div>
                     <select name="kubota-product_schedule" id="product_schedule">
-                        <option value="daily" <?php selected(get_option('kubota-product_schedule'), 'daily'); ?>>Weekly</option>
+                        <option value="daily" <?php selected(get_option('kubota-product_schedule'), 'daily'); ?>>Daily</option>
                         <option value="weekly" <?php selected(get_option('kubota-product_schedule'), 'weekly'); ?>>Weekly</option>
                     </select>
                 </div>
                 <div class="mt-4 mb-4">
                     <p class="text-sm text-gray-600 mt-3 italic">Select how often you would like Kubota products to be updated by the Kubota Connect API.</p>
                     <p class="text-sm text-gray-600 mt-2">Product information do not change often, so frequent updates are not recommended due to the high resource intensity involved.</p>
-                    <p class="text-sm text-gray-600 mt-2 mb-3">Our suggested schedule is <span class="italic">fortnighlty<span> or <span class="italic">monthly<span>.</p>
+                    <p class="text-sm text-gray-600 mt-2 mb-3">Our suggested schedule is <span class="italic">weekly<span>.</p>
                 </div>
             </td>
         </tr>
@@ -91,7 +91,7 @@
             <td>
                 <div>
                     <select name="kubota-finance_offer_schedule" id="finance_offer_schedule">
-                        <option value="daily" <?php selected(get_option('kubota-finance_offer_schedule'), 'daily'); ?>>Weekly</option>
+                        <option value="daily" <?php selected(get_option('kubota-finance_offer_schedule'), 'daily'); ?>>Daily</option>
                         <option value="weekly" <?php selected(get_option('kubota-finance_offer_schedule'), 'weekly'); ?>>Weekly</option>
                     </select>
                 </div>
@@ -99,7 +99,7 @@
                 <div class="mt-4">
                 <p class="text-sm text-gray-600 mt-2">Select how often you would like Kubota finance offers to be updated by the Kubota Connect API.</p>
                 <p class="text-sm text-gray-600 mt-3">Finance offers mainly get updated by Kubota on the first of a month.</p>
-                <p class="text-sm text-gray-600 mt-2">Finance offers stay mostly unchanged for a few month, so our suggested schedule is <span class="italic">fortnighlty</span> or <span class="italic">monthly</span> plus update on the first of each month.</p>
+                <p class="text-sm text-gray-600 mt-2">Finance offers stay mostly unchanged for a few month, so our suggested schedule is <span class="italic">weekly</span>.</p>
                 </div>
             </td>
         </tr>
