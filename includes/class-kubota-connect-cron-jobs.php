@@ -17,15 +17,15 @@ class Kubota_Connect_Cron {
      * @param string $api_key The API key used for authentication.
      */
     public function __construct() {
+
         $this->api_key = API_Key_Manager::get_api_key();
         $this->api_url = Kubota_Connect_Config::getConfig('api_url');
 
-        if ($this->api_key) {
-            add_action('init', [$this, 'schedule_cron_jobs']);
-            add_action('kubota-connect_import_products_event', [$this, 'import_products']);
-            add_action('kubota-connect_import_finance_offers_event', [$this, 'import_finance_offers']);
-            add_action('kubota-connect_import_highlights_event', [$this, 'import_highlights']);
-        }
+        add_action('init', [$this, 'schedule_cron_jobs']);
+        add_action('kubota-connect_import_products_event', [$this, 'import_products']);
+        add_action('kubota-connect_import_finance_offers_event', [$this, 'import_finance_offers']);
+        add_action('kubota-connect_import_highlights_event', [$this, 'import_highlights']);
+        
     }
 
     /**
@@ -104,8 +104,7 @@ class Kubota_Connect_Cron {
      * @return void
      */
     public function import_products() {
-        $product = new Product(new API_Client($this->api_url));
-        $product->import();
+        $this->handle_import('Product');
     }
 
     /**
@@ -117,8 +116,7 @@ class Kubota_Connect_Cron {
      * @return void
      */
     public function import_finance_offers() {
-        $finance_offer = new Finance_Offer(new API_Client($this->api_url));
-        $finance_offer->import();
+        $this->handle_import('Finance_Offer');
     }
 
     /**
@@ -130,7 +128,37 @@ class Kubota_Connect_Cron {
      * @return void
      */
     public function import_highlights() {
-        $highlight = new Highlight(new API_Client($this->api_url));
-        $highlight->import();
+        $this->handle_import('Highlight');
+    }
+
+    /**
+    * Handles the import process for different types of data.
+    *
+    * @param string $type      The type of data being imported (e.g., 'highlight', 'finance_offer').
+    * @param string $class_name The class responsible for handling the import (e.g., 'Highlight', 'Finance_Offer').
+    */
+    private function handle_import($class_name) {
+        if(!$this->api_key) {
+            return;
+        }
+
+        // Ensure proper context for cron jobs
+        if (defined('DOING_CRON') && DOING_CRON) {
+            if (!function_exists('is_user_logged_in')) {
+                function is_user_logged_in() {
+                    return false; // Set default value for cron job context
+                }
+            }
+        }
+
+        // Boot Carbon Fields only when necessary
+        \Carbon_Fields\Carbon_Fields::boot();
+
+        add_action('carbon_fields_fields_registered', function () use ($class_name) {
+            if ($this->api_key) {
+                $importer = new $class_name(new API_Client($this->api_url));
+                $importer->import();
+            }
+        });
     }
 }

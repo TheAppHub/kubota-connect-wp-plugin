@@ -20,6 +20,9 @@ class Kubota_Connect {
 
         // Initialize the cron jobs
         new Kubota_Connect_Cron();
+    
+       
+       // do_action('kubota-connect_import_highlights_event');
     }
 
     /**
