@@ -2,8 +2,8 @@
 
 Tags: Kubota, Kubota Connect, Kubota Australia, Kubota New Zealand
 Requires at least: 6.0.0
-Tested up to: 6.4.1
-Stable tag: 6.4.1
+Tested up to: 6.4.2
+Stable tag: 6.4.2
 
 Effortlessly connect your WordPress site to Kubota Connect and retrieve dealer-specific products, finance offers, and promotion slides. Enhance your website's functionality by showcasing the latest Kubota equipment, offers, and promotions tailored specifically to your dealership.
 
