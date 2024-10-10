@@ -1,18 +1,18 @@
 {
-  "name": "assets",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "devDependencies": {
-    "tailwindcss": "^3.4.4"
-  },
-  "dependencies": {
-    "@material-tailwind/html": "^2.2.2"
-  }
+    "name": "kubota-connect",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "The App HIUB",
+    "license": "SEE LICENSE IN LICENSE.txt",
+    "description": "",
+    "devDependencies": {
+        "tailwindcss": "^3.4.4"
+    },
+    "dependencies": {
+        "@material-tailwind/html": "^2.2.2"
+    }
 }

@@ -1,0 +1,8 @@
+Copyright (c) 2024 The App Hub
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to use the Software for personal or commercial purposes, subject to the following conditions:
+
+1. The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+2. The Software is provided "as-is," without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, or non-infringement. In no event shall the author or copyright holder be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the Software or the use or other dealings in the Software.
+3. The copyright remains with the original author, The App Hub, and this license does not imply any transfer of ownership.
+4. Any modifications to the Software must be clearly marked as such, and must not misrepresent the origin of the Software.

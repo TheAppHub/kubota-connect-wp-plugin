@@ -1,6 +1,5 @@
-=== Plugin Name ===
-Contributors: (this should be a list of wordpress.org userid's)
-Donate link: https://theapphub.com.au/
+=== Kubota Connect WordPress Plugin ===
+
 Tags: Kubota, Kubota Connect, Kubota Australia, Kubota New Zealand
 Requires at least: 6.0.0
 Tested up to: 6.4.1
