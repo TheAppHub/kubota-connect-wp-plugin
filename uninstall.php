@@ -36,6 +36,7 @@ wp_clear_scheduled_hook('kubota-connect_import_finance_offers_event');
 wp_clear_scheduled_hook('kubota-connect_import_highlights_event');
 wp_clear_scheduled_hook('kubota-connect_import_categories_event');
 
+
 // Delete custom taxonomy data
 delete_terms('kubota_category');
 
@@ -45,13 +46,12 @@ delete_cpt_data('kubotafinance_offer');
 delete_cpt_data('kubota-highlight');
 
 
-
 // Delete plugin options
 delete_option('kc_api_key');
-delete_option('product_schedule');
-delete_option('finance_offer_schedule');
-delete_option('highlight_schedule');
-delete_option('category_schedule');
+delete_option('kubota-product_schedule');
+delete_option('kubota-finance_offer_schedule');
+delete_option('kubota-highlight_schedule');
+delete_option('kubota-category_schedule');
 
 
 function delete_cpt_data($cpt) {
