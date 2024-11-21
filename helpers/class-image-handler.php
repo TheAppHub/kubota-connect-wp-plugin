@@ -156,9 +156,10 @@ class Image_Handler {
     public function shortcode_image($atts) {
         $material = isset($atts['theme']) && $atts['theme'] === 'material';
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
+        $alt_text = isset($atts['alt_text']) ? $atts['alt_text'] : get_the_title();
 
         $this->retrieve_image_urls('image', $post_id);
-        return $this->get_responsive_image_html($material);
+        return $this->get_responsive_image_html($alt_text, $material );
     }
 
     /**
@@ -172,9 +173,10 @@ class Image_Handler {
 
         $material = isset($atts['theme']) && $atts['theme'] === 'material';
         $post_id = isset($atts['post_id']) ? intval($atts['post_id']) : get_the_ID();
+        $alt_text = isset($atts['alt_text']) ? $atts['alt_text'] : get_the_title();
 
         $this->retrieve_image_urls('hero-image', $post_id);
-        return $this->get_responsive_image_html($material);
+        return $this->get_responsive_image_html($alt_text, $material);
     }
 
     /**
@@ -182,9 +184,9 @@ class Image_Handler {
      *
      * @return string HTML markup.
      */
-    private function get_responsive_image_html($material = false, $alt_text = false) {
-        $alt_text = !$alt_text ? get_the_title() : $alt_text;
-        $class = $material ? 'rounded-lg shadow-lg max-w-full w-full h-auto' : 'max-w-full h-auto';
+    private function get_responsive_image_html($alt_text, $material = false) {
+        $class = 'kubota-connect-image max-w-full w-full h-auto';
+        if($material) $class .= ' rounded-lg shadow-lg';
 
         // Get
         $small  = $this->get_image_url('small');
@@ -207,7 +209,7 @@ class Image_Handler {
         );
 
         // Define the sizes attribute
-        $sizes_attr = '(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw';
+        $sizes_attr = '(max-width: 352px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 50vw, 100vw';
 
         // Default src to the 'large' version
         $default_src = esc_url($medium);
@@ -223,6 +225,6 @@ class Image_Handler {
             ' loading="auto"'
         );
 
-        return '<div class="kubota-connect-image">' . $img_tag . '</div>';
+        return $img_tag;
     }
 }
