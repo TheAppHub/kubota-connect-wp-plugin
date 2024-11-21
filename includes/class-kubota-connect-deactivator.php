@@ -20,5 +20,8 @@
  * @subpackage Kubota_Connect/includes
  */
 class Kubota_Connect_Deactivator {
-
+    
+    public static function deactivate() {
+		error_log('Kubota Connect plugin deactivated');
+	}
 }
