@@ -11,7 +11,7 @@
     <li class="text-gray-600"><code>[kubota-connect-product-documents]</code> - Displays links to additional product documents.</li>
     <li class="text-gray-600"><code>[kubota-connect-product-model-names]</code> - Displays the model names in an HTML unordered list.</li>
     <li class="text-gray-600"><code>[kubota-connect-product-specs-table]</code> - Displays the models and specifications in a table.</li>
-    <li class="text-gray-600"><code>[kubota-connect-image]</code> - Displays the image of the product.</li>
+    <li class="text-gray-600"><code>[kubota-connect-image]</code> - Displays the image of the product. Pass in <code>alt_text</code> if the alt attribute is not the product title</li>
     <li class="text-gray-600"><code>[kubota-connect-hero-image]</code> - Displays the hero image of the product.</li>
 </ul>
 <h3 class="text-lg font-semibold mb-2">Category Shortcodes</h3>
@@ -40,9 +40,9 @@
     <li class="text-gray-600"><code>[kubota-connect-finance-offer-details]</code> - Displays the finance offer list of details.</li>
 </ul>
 <h3 class="text-md font-semibold mt-6 mb-2">Usage Example</h3>
-<p class="text-gray-600">To display a table of product models and specifications from a specific post with Material Design styling, you can use the following shortcode:</p>
+<p>To display a table of product models and specifications from a specific post with Material Design styling, you can use the following shortcode:</p>
 <pre><code>[kubota-connect-product-specs-table post_id="123" theme="material"]</code></pre>
 <p>In this example, the shortcode pulls data from the post with ID 123 and applies Material Design styling to the table output.</p>
 <h2 class="text-xl font-semibold mt-8 mb-2">Custom Content</h2>
-<p class="text-gray-600">Kubota Products and Kubota Finance Offers retain the default WordPress editor, allowing the administrator to add custom copy to each post.</p>
+<p>Kubota Products and Kubota Finance Offers retain the default WordPress editor, allowing the administrator to add custom copy to each post.</p>
 <p>This editor field is the only one that remains editable by admins. All other fields will be automatically overwritten during each content update to ensure the latest information from the Kubota Connect API is reflected.</p>

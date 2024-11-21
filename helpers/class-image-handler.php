@@ -182,37 +182,47 @@ class Image_Handler {
      *
      * @return string HTML markup.
      */
-    private function get_responsive_image_html($material = false) {
+    private function get_responsive_image_html($material = false, $alt_text = false) {
+        $alt_text = !$alt_text ? get_the_title() : $alt_text;
+        $class = $material ? 'rounded-lg shadow-lg max-w-full w-full h-auto' : 'max-w-full h-auto';
+
+        // Get
         $small  = $this->get_image_url('small');
         $medium = $this->get_image_url('medium');
         $large  = $this->get_image_url('large');
         $xlarge = $this->get_image_url('xlarge');
 
+        // If no image is set, return a placeholder
         if (!$medium) {
             return '<p>No image available.</p>';
         }
+       
+        // Generate the srcset attribute using the provided URLs
+        $srcset = sprintf(
+            '%s 352w, %s 768w, %s 1024w, %s 1632w',
+            esc_url($small),
+            esc_url($medium),
+            esc_url($large),
+            esc_url($xlarge)
+        );
 
-        if ($material) {
-            return '<div class="flex justify-center">
-                        <img 
-                            src="' . esc_url( $medium ).'" 
-                            srcset="' . esc_url( $small) . ' 352w, ' . esc_url( $medium) . ' 768w, ' . esc_url( $large) . ' 1024w, ' . esc_url( $xlarge) . ' 1632w"
-                            sizes="100vw"
-                            alt="Kubota"
-                            class="rounded-lg shadow-lg"
-                            loading="lazy"
-                        />
-                    </div>';
-        } else {
-            return '<div class="kubota-connect-image">
-                        <img 
-                            src="' . esc_url( $medium ).'" 
-                            srcset="' . esc_url( $small) . ' 352w, ' . esc_url( $medium) . ' 768w, ' . esc_url( $large) . ' 1024w, ' . esc_url( $xlarge) . ' 1632w"
-                            sizes="100vw"
-                            alt="Kubota"
-                            loading="lazy"
-                        />
-                    </div>';
-        }
+        // Define the sizes attribute
+        $sizes_attr = '(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw';
+
+        // Default src to the 'large' version
+        $default_src = esc_url($medium);
+
+        // Construct the img tag
+        $img_tag = sprintf(
+            '<img src="%s" srcset="%s" sizes="%s" alt="%s" class="%s"%s>',
+            $default_src,
+            esc_attr($srcset),
+            esc_attr($sizes_attr),
+            esc_attr($alt_text),
+            esc_attr($class),
+            ' loading="auto"'
+        );
+
+        return '<div class="kubota-connect-image">' . $img_tag . '</div>';
     }
 }
