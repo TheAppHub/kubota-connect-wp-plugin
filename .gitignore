@@ -38,3 +38,4 @@ build/
 composer.lock
 package-lock.json
 yarn.lock
+.qodo

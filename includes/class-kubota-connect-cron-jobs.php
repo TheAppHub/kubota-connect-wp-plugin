@@ -17,15 +17,20 @@ class Kubota_Connect_Cron {
      * @param string $api_key The API key used for authentication.
      */
     public function __construct() {
+        error_log('Cron jobs constructor');
 
         $this->api_key = API_Key_Manager::get_api_key();
         $this->api_url = Kubota_Connect_Config::getConfig('api_url');
 
         add_action('init', [$this, 'schedule_cron_jobs']);
+        
+        $this->init_cron_jobs();
+    }
+
+    public function init_cron_jobs(){
         add_action('kubota-connect_import_products_event', [$this, 'import_products']);
         add_action('kubota-connect_import_finance_offers_event', [$this, 'import_finance_offers']);
         add_action('kubota-connect_import_highlights_event', [$this, 'import_highlights']);
-        
     }
 
     /**
@@ -54,15 +59,18 @@ class Kubota_Connect_Cron {
         $schedule = get_option($cpt . '_schedule', 'daily');
 
         if ($schedule === 'never') {
+            error_log("Cron job for $cpt is set to never, skipping scheduling.");
             return;
         }
 
         $timestamp = wp_next_scheduled($hook);
         if ($timestamp) {
+            error_log("Unscheduling existing event for $hook.");
             wp_unschedule_event($timestamp, $hook);
         }
 
         $next_run_time = $this->get_next_run_time($schedule);
+        error_log("Scheduling cron job $hook to run at " . date('Y-m-d H:i:s', $next_run_time));
         wp_schedule_event($next_run_time, $schedule, $hook);
     }
 
@@ -132,7 +140,8 @@ class Kubota_Connect_Cron {
      * @return void
      */
     public function import_highlights() {
-        $this->handle_import('Highlight');
+        error_log('Importing highlights');
+       $this->handle_import('Highlight');
     }
 
     /**
@@ -143,6 +152,7 @@ class Kubota_Connect_Cron {
     */
     private function handle_import($class_name) {
         if(!$this->api_key) {
+            error_log('API Key not set. Skipping import.');
             return;
         }
 

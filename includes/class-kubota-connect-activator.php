@@ -31,6 +31,7 @@ class Kubota_Connect_Activator {
 	 */
 	public static function activate() {
 		self::set_default_import_schedules();
+        self::schedule_cron_jobs();
 	}
 
 
@@ -50,4 +51,21 @@ class Kubota_Connect_Activator {
             update_option('kubota-highlight_schedule', 'daily');
         }
     }
+
+    /**
+	 * Schedule default cron jobs.
+	 *
+	 * @since    1.0.0
+	 */
+	public static function schedule_cron_jobs() {
+		if (!wp_next_scheduled('kubota_product_import_hook')) {
+			wp_schedule_event(time(), 'weekly', 'kubota_product_import_hook');
+		}
+		if (!wp_next_scheduled('kubota_finance_offer_import_hook')) {
+			wp_schedule_event(time(), 'weekly', 'kubota_finance_offer_import_hook');
+		}
+		if (!wp_next_scheduled('kubota_highlight_import_hook')) {
+			wp_schedule_event(time(), 'daily', 'kubota_highlight_import_hook');
+		}
+	}
 }

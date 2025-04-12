@@ -320,21 +320,25 @@ class Product extends Base_Importer {
 
         // Add features
         $features = [];
-        foreach ($item['features'] as $feature) {
-            $features[] = [
-                'feature_name' => $feature['name'],
-                'feature_description' => $feature['description'],
-            ];
+        if (!empty($item['features'])) {
+            foreach ($item['features'] as $feature) {
+                $features[] = [
+                    'feature_name' => $feature['name'],
+                    'feature_description' => $feature['description'],
+                ];
+            }
         }
         carbon_set_post_meta($post_id, 'product_features', $features);
 
         // Add additional documents
         $documents = [];
-        foreach ($item['additionalDocuments'] as $document) {
-            $documents[] = [
-                'doc_title' => $document['title'],
-                'doc_file' => $document['file'],
-            ];
+        if(!empty($item['additionalDocuments'])) {
+            foreach ($item['additionalDocuments'] as $document) {
+                $documents[] = [
+                    'doc_title' => $document['title'],
+                    'doc_file' => $document['file'],
+                ];
+            }
         }
         carbon_set_post_meta($post_id, 'additional_documents', $documents);
 

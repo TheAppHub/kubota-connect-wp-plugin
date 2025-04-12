@@ -21,6 +21,7 @@ class Highlight extends Base_Importer {
      */
     public function __construct($api_client) {
         parent::__construct($api_client, $this->name);
+        error_log('Highlight constructor');
 
         // Register custom post type
         add_action('init', [$this, 'create_custom_post_type']);

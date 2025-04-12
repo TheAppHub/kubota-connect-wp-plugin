@@ -68,7 +68,7 @@ if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) :
 	require_once dirname( __FILE__ ) . '/vendor/autoload.php';
 endif;
 
-add_action('after_setup_theme', function () {
+add_action('plugins_loaded', function () {
 	\Carbon_Fields\Carbon_Fields::boot();
 });
 
