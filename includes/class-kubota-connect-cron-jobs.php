@@ -156,6 +156,12 @@ class Kubota_Connect_Cron {
             return;
         }
 
+        // Set the user ID for the current user
+        $user_id = get_option('kubota_connect_installer_user_id');
+        if ($user_id) {
+            wp_set_current_user($user_id);
+        }
+
         // Ensure proper context for cron jobs
         if (defined('DOING_CRON') && DOING_CRON) {
             if (!function_exists('is_user_logged_in')) {

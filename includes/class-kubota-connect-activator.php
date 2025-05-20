@@ -30,6 +30,7 @@ class Kubota_Connect_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
+        self::save_installer_user_id();
 		self::set_default_import_schedules();
         self::schedule_cron_jobs();
 	}
@@ -68,4 +69,16 @@ class Kubota_Connect_Activator {
 			wp_schedule_event(time(), 'daily', 'kubota_highlight_import_hook');
 		}
 	}
+
+    /**
+     * Save the installer user ID to the database.
+     *
+     * @since    1.0.0
+     */
+    public static function save_installer_user_id() {
+        if (is_user_logged_in()) {
+            $installer_user_id = get_current_user_id();
+            update_option('kubota_connect_installer_user_id', $installer_user_id);
+        }
+    }
 }
